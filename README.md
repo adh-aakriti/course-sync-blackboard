@@ -66,7 +66,7 @@ COURSE_NAME/
 MASTERFILE.txt
 
 
-The MASTERFILE contains structured lecture content such as SQL concepts, database structures, and analytical techniques.
+The MASTERFILE contains structured lecture content such as SQL concepts, database structures, and analytical techniques for database course.
 
 ---
 
