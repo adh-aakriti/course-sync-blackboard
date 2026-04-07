@@ -1,0 +1,4 @@
+username:admin
+password:DZb?Cj)Z#d~SPpLQCGaO)__D#0uD
+host:database-1.cvew0aakolx3.eu-north-1.rds.amazonaws.com
+port:3306

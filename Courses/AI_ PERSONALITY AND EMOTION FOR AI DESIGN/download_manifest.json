@@ -1,0 +1,69 @@
+{
+  "downloads": [
+    {
+      "source_id": "_2406285_1",
+      "saved_name": "S01_JM_intro.pdf",
+      "sha256": "a0cb98456214c5aa3b69237375babaf6abb7e6eb6ec63fb88c7556274bce2995"
+    },
+    {
+      "source_id": "_2422784_1",
+      "saved_name": "S01_JM_intro (2).pdf",
+      "sha256": "4d29391a0f887a1da2f7642ffec8615f92f978885e12570f9f207dfcad6953f0"
+    },
+    {
+      "source_id": "_2406288_1",
+      "saved_name": "S02_JM_neurons.pdf",
+      "sha256": "e84baaf0b4a7211a1b29c7e9f8f188d7ee2a2ac083e5f8ef0694e8c00bd37e42"
+    },
+    {
+      "source_id": "_2450229_1",
+      "saved_name": "S02_JM_neurons (2).pdf",
+      "sha256": "a606262abf5c7ddda91cd338d3f53beb7d0581e3cf040b68ef1e10fa1df7c109"
+    },
+    {
+      "source_id": "_2471476_1",
+      "saved_name": "S03 - LD - Learning.ipynb",
+      "sha256": "8e318eb4943d0486013a6d21038c21bb931deb3c866fba95cd0426776f238dcf"
+    },
+    {
+      "source_id": "_2471619_1",
+      "saved_name": "S03 - LD - Learning.pdf",
+      "sha256": "23630cd4d92ae7bd712d015908fa95b7761642c15d237dcc1071ac9ddbf4a3d5"
+    },
+    {
+      "source_id": "_2485706_1",
+      "saved_name": "S04 - JM - MLPs.pdf",
+      "sha256": "a07dde9daf26794477291e93853052dfe9f3e95c7fed31c55869c2ac84bd2d3d"
+    },
+    {
+      "source_id": "_2490389_1",
+      "saved_name": "S04 - JM - MLPs.ipynb",
+      "sha256": "2f1107031e9598d47aa5308713a8d4363008f09b13992a1241fef6ad11cbeaec"
+    },
+    {
+      "source_id": "_2517275_1",
+      "saved_name": "S05 - JM - Brains vs. ANNs.pdf",
+      "sha256": "6ce3f97fe79fa128e436f44fa71b6519cb9fc13a74bc39333b16f196c084715c"
+    },
+    {
+      "source_id": "_2528423_1",
+      "saved_name": "S05 - JM - Brains vs. ANNs (2).pdf",
+      "sha256": "8748e1372b01dd9f5d24e5323542aea4a58677abc5c3d3734d0deb508f26ba52"
+    },
+    {
+      "source_id": "_2544629_1",
+      "saved_name": "S06_JM_Memory and problem solving.pdf",
+      "sha256": "569b7ed62bae503bb3d649869c9aa83562da9389af1ec9dec4d115bdfdd4575b"
+    },
+    {
+      "source_id": "_2544633_1",
+      "saved_name": "S06_JM_Memory and problem solving.ipynb",
+      "sha256": "c7ec5893162c2918307bb8ce9879aca5e842fda3498331e1fb80e1371686da68"
+    },
+    {
+      "source_id": "_2559098_1",
+      "saved_name": "S07_JM_dimensionality_reduction.ipynb",
+      "sha256": "8f5fc67a608196b34066cb37780f54d325f5f046b13786129edd295018317ac9"
+    }
+  ]
+}

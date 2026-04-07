@@ -1,0 +1,3622 @@
+COURSE: AI_ PERSONALITY AND EMOTION FOR AI DESIGN
+
+This file contains all extracted lecture material for this course.
+Each section corresponds to one downloaded file.
+
+====================================
+
+
+FILE: S01_JM_intro (2).pdf
+SECTION: S01_JM_intro (2)
+
+CONTENT:
+Personality & Emotion for
+AI Design
+BCSAI - Spring 2025
+Session 2 - Neurons and the Basics of Neural Networks
+Many slides adapted from Lafferty (Yale), Weinberger (Cornell), Szameitat (Brunel)
+Session 2 - Neurons and the Basics of Neural Networks
+• Basic neuroscience: How biological neurons work
+• Similarities between brain and AI,
+• Similarities between biological and artificial neurons
+• Models of artificial neurons
+• The perceptron: A simple neural network model
+The brain
+When the brain receives any ambiguous or even
+cluttered sensory input, we tend to impose
+consistent interpretations, at least consciously.
+In recent decades it has become clear that
+unconsciously the brain can consider many
+interpretations of many inputs, some of them
+inconsistent with each other. Our brain’s ability
+to extract consistency in an inconsistent-to-
+lifelike image underlies our love for and
+understanding of abstract art forms, such as
+Impressionism.
+Fundamentals of cognitive neurscience: A beginner´s guide. Gage & Baars
+The brain
+Fundamentals of cognitive
+neurscience: A beginner´s guide.
+Gage & Baars
+The brain
+More and more evidence is providing support for
+the notion that it is our unconscious processing
+that forms the overwhelming majority of brain
+functions. Our vast store of memories, language
+knowledge, automaticities, and procedural
+learning combine to form the largely unconscious
+but accessible if recalled storage of what we have
+learned and experienced throughout our life. Shown
+in the green boxes at the base of [previous] Fig. 1.4,
+this information is retrievable, in large part, and
+forms the bulk of the iceberg of our knowledge
+store. Conscious contents, at any given moment,
+form merely the tip of this massive iceberg.
+Fundamentals of cognitive neurscience: A beginner´s guide. Gage & Baars
+The brain and AI: Similarities
+Most “knowledge” is latent and inaccessible: Neural networks store
+vast amounts of information in weights, which:
+• Cannot be directly inspected in a human-readable way
+• Represent statistical patterns learned from data
+• Only the small, explicit part that the model outputs during inference is
+visible.
+Computations are mostly automatic:
+• Neural networks operate via automatic activation of layers
+• Don’t “choose” which memories to activate
+• don’t have introspection or access to their hidden states
+The brain and AI: Differences
+No conscious/unconscious divide
+AI does not recall or retrieve memories
+No self-model, awareness nor introspection
+Narrow
+Q: Can AI think outisde the box?
+The brain and AI
+• AI is more similar to:
+• implicit memory systems (procedural memory, unconscious)
+• fast pattern completion (e.g., visual cortex)
+• associative semantic networks.
+• But AI lacks:
+• intentionality
+• goals
+• subjective awareness
+• metacognition
+• autobiographical memory
+...for the moment
+The neuron
+A neuron does nothing
+unless the collective
+influence of all its inputs
+reaches a threshold
+level.
+Whenever this happens,
+the neuron is said to fire.
+Because a neuron either
+fires or does nothing, it is
+said to be an all-or-none
+device.
+There is mounting evidence
+that learning takes place in
+the vicinity of synapses and
+has something to do with
+the degree to which
+synapses translate the
+pulse traveling down one
+neuron's axon into
+excitation or inhibition of the
+next neuron.
+Pyramidal neuron, by Ramón y Cajal (1904)
+Purkinje neuron, by Ramón y Cajal (1899)
+Santiago Ramón y Cajal was a neuroscience pioneer
+and documented many types of neurons and
+their connectivity.
+Video:
+El Legado de la Ciencia. Santiago Ramón y Cajal | Museu de les Ciències
+Neurons and Artificial neurons: Similarities
+Bing Video of a neuron of a cat:
+The neuron:
+• Simple cells: Respond to very specific featurese.g., a line at a
+particular orientation in a particular location of the visual field.
+• Complex cells: Respond to more abstract features e.g., oriented
+lines anywhere within a region, or movement in a direction.
+• Hierarchical organization: The visual cortex works in layers:
+simple cells detect edges, complex cells detect oriented edges &
+movement) & higher-level areas detect shapes, objects, faces…
+Neurons and Artificial neurons: Similarities
+The first layer learns edge detectors, like simple cells
+They respond to features like: vertical, horizontal, diagonal edges...
+As you go deeper layers respond to more abstract patterns
+Combine simple edges into: corners, textures, object parts, whole objects
+hierarchical strategy: low-level features first & high-level meaning later
+Heavily reuse the same filters across space (this is why NNs were
+originally seen as bio-inspired networks).
+Biological neurons connect mostly to nearby neurons → Convolutional
+NNs use local receptive fields.
+Neurons and Artificial neurons: Differences
+While the inspiration is strong, ANNs are not literal models of the
+cortex:
+neurons in the brain are far more complex
+biological vision uses massive feedback loops (NNs mostly don’t)
+real neurons adapt dynamically; NN weights are fixed after training
+the cortex is nonlinear in far richer ways
+Tensorflow playground
+The neuron as a decision machine
+Simplest case: binary inputs, {-1, +1}
+●
+Inputs are scaled according to "synaptic strength" and summed up
+●
+Neurons "fires" if total sum is above a certain threshold
+●
+x w
+1 1
+w θ
+2
+x Output (-1,+1)
+2
+The neuron as a decision machine
+Example: classifying animals into birds or not
+eagle camel snake
+warm blooded? x w
++1 +1 -1
+1 1
++1 -1 +1 w θ
+2
+lays eggs? x bird?
+2
+some inputs
+Q: how to implement this?
+(i.e., find reasonable synaptic weights w , w , and a firing threshold θ)
+1 2
+Validating your classifier
+Make sure that it works on the training examples:
+-
+eagle camel snake
++1 +1 -1
++1 -1 +1
+Does it work on all possible examples?
+-
+Logical AND operator
+Our first neuron tested if an animal was warm blooded and layed eggs.
+It would output +1 (true) if, and only if, both conditions were satisfied (true).
+(If either was false, it would output false)
+F
+F
+F
+F
+F
+T
+T
+F
+F
+T
+T
+T
+Logical OR
+Can we come up with a neuron that implements the OR operator?
+It should output +1 (true) if any condition is satisfied (true).
+(Only outputs false if all inputs are false.)
+Example scenario:
+F
+F
+F
+"OR" neuron
+face recognized? w
+F
+1
+T
+T
+T w θ
+T
+2
+F access to IE tower?
+access card?
+T
+T
+T
+Q: how to implement the OR neuron? (find w , w , θ)
+1 2
+A more convenient notation
+Represent inputs as: x , x , …, x with corresp. weights: w , w , …, w
+1 2 n 1 2 n
+Represent output as y
+Treat the threshold as an additional weight w :
+0
+Instead of checking:
+w1x1 + w2x2 + … + wnxn > θ
+x w
+we rearrange it as: 2 2
+w1x1 + w2x2 + … + wnxn - θ > 0
+w
+x
+1
+1 y
+By setting w0 = -θ, we have:
+w
+0
+w0 + w1x1 + w2x2 + … + wnxn > 0
+1
+Can we solve more complicated tests?
+Can we fix the bird detecting neuron?
+-
+- E.g.:
+(warm blooded and lays eggs) and (does not lactate)
+Q: implement the neuron above. Hint: inhibitory connections!
+Can we solve more complicated tests?
+It is possible to combine multiple logical operators into a single neuron!
+-
+- E.g., you can enter the gym if:
+(membership is active and you bring your id)
+or
+(you purchase a day pass and sign the waiver)
+Q: implement the neuron above
+What about non-binary inputs?
+width height
+Not all problems are logical – numerical data are
+(cm) (cm)
+everywhere!
+5.6 7.2
+e
+p
+Example 1: classifying lemons in a juice factory
+i
+r 5.2 7.0
+t
+o
+n
+5.5 7.6
+5.7 7.5
+m
+t h o c
+g .g 5.8 7.7
+i n
+e ik
+h r
+a
+m
+s w e p 5.9 7.9
+e
+)T
+fo
+U
+width
+h tta
+m
+:e
+i r
+6.1 8.1
+(
+r e
+c
+r u
+ld o
+iF S
+,m 6.2 8.2
+u
+s
+a
+tr Can we still use a neuron in this case?
+U
+,le
+m
+e
+Z
+:tid
+e
+r
+C
+What about non-binary inputs?
+width height
+(cm) (cm)
+Not all problems are logical – numerical data are
+5.6 7.2
+everywhere!
+e
+p
+i
+r 5.2 7.0
+t
+o
+Example 1: classifying lemons
+n
+5.5 7.6
+5.7 7.5
+height w 5.8 7.7
+t 2
+h
+g
+i e e 5.9 7.9
+h p
+i
+r
+w
+1 6.1 8.1
+width width ripe?
+6.2 8.2
+w
+0
+1
+Hint: if you don't need
+one of the inputs, just
+set its corresponding
+Q: how to classify lemons into ripe vs. not ripe? (choose w , w , w )
+0 1 2 weight to zero!
+What about non-binary inputs?
+width height
+(cm) (cm)
+5.7 7.2
+Example 2: classifying fruits
+5.9 7.7
+s
+t n
+h
+o 6.1 8.8
+g
+i m
+e
+h e
+l
+6.5 7.8
+height w
+2
+width
+7.5 8.3
+6.9 6.5
+w
+1
+width lemon?
+7.2 7.2
+w s
+e
+0
+g
+n 7.5 7.4
+1 a
+r
+o
+8.1 8.0
+Quiz: How to distinguish between lemons and oranges?
+6.3 6.2
+No longer trivial!
+(Try: w = 0, w = -1, w = 1)
+0 1 2
+Dot products and duality | Chapter 9, Essence of linear algebra
+The “dot” product
+5
+⃗u + v⃗ =
+3
+1
+u⃗ - ⃗v =
+-1
+2
+⃗ ⃗u ∙ ⃗v = 2×3 + 2×1 = 6 + 2 = 8
+v =
+3
+2
+u⃗ =
+1
+Adds the products of corresponding
+components of two vectors…
+— it produces a scalar!
+The dot product – properties
+u ∙ v = v ∙ u
+1.
+(u, v, w are vectors)
+u ∙ (v + w) = u ∙ v + u ∙ w
+2.
+(Cv) ∙ w = C (v ∙ w) = v ∙ (Cw)
+3.
+(C is a scalar)
+⃗ ⃗
+0 ∙ v = 0
+4.
+(all-zeroes vector)
+v ∙ v = ||v||2 ||v|| = √v 2 + v 2 + … + v 2 = √v ∙ v
+5.
+(magnitude squared) Since:
+1 2 n
+Q: check for yourself that all of these properties really hold
+The dot product – geometric interpretation
+Remember our long lost friend: the law of cosines!
+The dot product – geometric interpretation
+B
+Law of cosines:
+a2 = b2 + c2 - 2bc cos A a
+c
+C
+b
+A
+⃗
+u
+What if instead of a triangle
+we have two vectors?
+θ
+⃗
+v
+The dot product – geometric interpretation
+B
+Law of cosines:
+a2 = b2 + c2 - 2bc cos A a
+c
+C
+b
+A
+⃗
+u ?
+θ
+⃗
+v
+The dot product – geometric interpretation
+B
+Law of cosines:
+a2 = b2 + c2 - 2bc cos A a
+c
+C
+b
+A
+⃗
+⃗ ⃗
+v + ? = u
+⃗
+u ?
+⃗
+? =
+θ
+⃗
+v
+The dot product – geometric interpretation
+B
+Law of cosines:
+a2 = b2 + c2 - 2bc cos A a
+c
+C
+b
+A
+⃗
+u
+⃗ ⃗
+u - v
+θ
+⃗
+v
+The dot product – geometric interpretation
+B
+Law of cosines:
+a2 = b2 + c2 - 2bc cos A a
+c
+C
+b
+A
+Now apply the identity:
+║u - v║2 = ║v║2 + ║u║2 - 2║v║║u║cos θ
+⃗
+u
+⃗ ⃗
+u - v (u-v)∙(u-v) =
+u∙u - 2v∙u + v∙v =
+║u║2 - 2v∙u + ║v║2 = ║v║2 + ║u║2 - 2║v║║u║cos θ
+θ
+- 2v∙u = - 2║v║║u║cos θ
+⃗
+v
+The dot product – geometric interpretation
+B
+Law of cosines:
+a2 = b2 + c2 - 2bc cos A a
+c
+C
+b
+A
+Now apply the identity:
+║u - v║2 = ║v║2 + ║u║2 - 2║v║║u║cos θ
+⃗
+u
+⃗ ⃗
+u - v (u-v)∙(u-v) =
+u∙u - 2v∙u + v∙v =
+║u║2 - 2v∙u + ║v║2 = ║v║2 + ║u║2 - 2║v║║u║cos θ
+θ
+- 2v∙u = - 2║v║║u║cos θ
+⃗
+v
+v∙u = ║v║║u║cos θ
+The dot product – geometric interpretation
+(Important) conclusions:
+v ∙ u = ||v|| ||u|| cos θ
+Effectively computes the
+cos θ = v ∙ u dot product between two
+unit vectors
+||v|| ||u||
+θ = cos-1 v ∙ u
+⃗
+u Must be a number
+u
+between -1 and +1
+||u||
+θ
+⃗
+v v
+||v||
+The dot product – geometric interpretation
+(Important) conclusions:
+v ∙ u = ||v|| ||u|| cos θ
+Q1: What happens if u and v are orthogonal?
+cos θ = v ∙ u
+Q2: What happens if u and v point in the same direction?
+||v|| ||u||
+What about the opposite direction? (θ = 180o)
+θ = cos-1 v ∙ u
+⃗
+u
+θ
+⃗
+v
+What does all this have to do with neurons?
+Recall: x
+n w
+n
+… …
+The output of our artificial neuron was computed as:
+x w
+2 2
++1 if w + w x + w x + … + w x > 0
+w 0 1 1 2 2 n n
+1
+y
+x y =
+1
+-1 otherwise.
+w
+0
+1
+x w
+But: 3 3
+n
+x w
+2 . 2 = ⃗ x . ⃗ w = w + w x + w x + w x = w x
+0 1 1 2 2 3 3 i i
+x w
+1 1 i=0
+(e.g., for n=3) 1 w ⃗x .
+w
+⃗
+0 +1 if > 0
+y =
+Can express decision rule as:
+-1 otherwise.
+The geometry behind a neuron's decision rule
+We can plot these as points in 2-D:
+Recall the neuron below:
+width -1.1
+1
+height lemon?
+Example inputs:
+0
+0
+width 5.7 5.9 6.1 6.5 7.5 6.9 7.2 7.5 8.1 8.3
+7.2 7.7 8.8 7.8 8.3 6.5 7.2 7.4 8.0 8.1
+height
+The geometry behind a neuron's decision rule
+vectors
+We can plot these as points in 2-D:
+Recall the neuron below:
+width -1.1
+1
+height lemon?
+-1.1
+⃗
+w =
+Example inputs:
+1 0
+0
+w
+width 5.7 5.9 6.1 6.5 7.5 6.9 7.2 7.5 8.1 8.3 1
+What about the weights?
+7.2 7.7 8.8 7.8 8.3 6.5 7.2 7.4 8.0 8.1 w
+height 2
+The geometry behind a neuron's decision rule
+Recall: the neuron
+decision rule
+w ⃗ . x ⃗
++1 if > 0
+y =
+-1 otherwise.
+Q: Which vectors x would
+yield ⃗ ⃗ ?
+w ∙ x = 0
+All vectors perpendicular to w!
+(along the dashed line)
+-1.1
+⃗
+w =
+1 0
+Q: What is the dashed
+0
+line?
+The geometry behind a neuron's decision rule
+Recall: the neuron
+decision rule
+w ⃗ . x ⃗
++1 if > 0
+y =
+-1 otherwise.
+Q: Which vectors x would
+⃗ ⃗
+yield w ∙ x > 0 ?
+All vectors on the same side
+of the dashed line as w (angle < 90o).
+-1.1
+⃗
+w =
+Q: Which vectors x would
+1 0 ⃗ ⃗
+yield ?
+w ∙ x < 0
+0
+All vectors on the opposite side
+of the dashed line as w (angle > 90o).
+Q:
+Can you find the neuron that solve this problem?
+x
+2
+Hint: start from the line equation
+y = +1
+y = -1
+Moment of truth: a neuron is nothing
+x more than a linear inequation!
+1
+Binary problems can also be solved this way:
+Recall:
+access card?
+"OR" neuron
+face recognized? w
+1
+1
+w θ
+2
+access to
+access card?
+IE tower?
+0
+face recognized?
+1
+0
+Binary problems can also be solved this way:
+Recall:
+access card?
+"OR" neuron
+face recognized? w
+1
+1
+w
+2
+access to
+access card?
+IE tower?
+w
+0
+0
+face recognized?
+1
+0
+What about higher dimensions?
+With more inputs, the boundary is still linear: point -> line -> plane ->
+hyperplane
+A hyperplane in Rd is a hyperplane
+w ∙ x = 0 w ∙ x = 0 w ∙ x = 0
+w + w x + w y + w z = 0
+w + w x + w y = 0
+0 1 2 0 1 2 3 w + w x + w x + … + w x = 0
+0 1 1 2 2 d d
+How to learn the decision boundary/weights
+automatically?
+We need an algorithm for that: enter the perceptron
+a
+id
+e
+p
+ik
+iW
+Frank Rosenblatt
+
+------------------------------------
+
+
+FILE: S01_JM_intro.pdf
+SECTION: S01_JM_intro
+
+CONTENT:
+Personality & Emotion for
+AI Design
+BCSAI - Spring 2025
+Lecture 1 - Introduction
+Many slides adapted from Lafferty (Yale), Weinberger (Cornell), Szameitat (Brunel)
+Javier Muro
+• Remote sensing scientists
+• Geospatial data analysis and applied AI
+Me
+Course objectives
+• Gain some new perspective
+• Appreciate some of the power and limitations of ML
+• Reflect on societal implications of AI/ML
+• Learn the basics of CogSci, ML, Deep Learning
+• Have fun & want to learn more
+Learning objectives
+• AI -> major part of your degree
+• Many of you will be involved in designing or
+implementing these systems in the near future
+• We should all be able to talk about/have an informed opinion on:
+• the possibilities of “AI”
+• its shortcomings
+• what it is and what it is not
+Evaluation criteria
+Ingredients for good lectures
+• Professor
+• Students
+AI map
+What the current
+media refers to when
+use the term “AI” is
+only a very small part
+of everything that
+“intelligent” computer
+programs can do!
+Where everything started
+Promise of the field of AI (since
+the 50's and today): develop
+machines that possess
+intelligence comparable to that
+of humans
+Where everything started
+https://techgenies.com/ai-history-the-first-summer-and-winter-of-ai/
+Limitations of AI
+Limitations of AI
+Bias in
+DATA
+CLEANING
+Bias out
+https://www.bloomberg.c
+om/graphics/2023-
+generative-ai-bias/
+https://www.france24.com/en/live-news/20240317-gemini-s-flawed-ai-racial-
+images-seen-as-warning-of-tech-titans-power
+AI will solve all our problems AI will kill us all Not much will change
+The current AI boom has been spurred by
+the following principle:
+Link to video
+The current AI boom has been spurred by
+the following principle:
+massive amounts of data
+— often derived from human behavior —
+as a substitute for intelligence
+Now compare with the human brain:
+Source: https://www.youtube.com/watch?v=_6R7Ym6Vy_I
+Criticism from part of the
+AI/tech community:
+https://www.youtube.com/watch?v=21EYKqUsPfg
+Efficiency
+~13 Watts
+B. The Human Brain’s Computational Efficiency
+The brain is estimated to be capable of performing on average 1x1018 FLOPs (floating-point operations per
+second). Determine the ratio of FLOPs of computation per watt of brain function.
+2.8 x 1018 FLOPs/Watt
+Source: https://craft.stanford.edu/resource/is-ai-more-efficient-than-the-human-brain/
+~1 400 000 Watts
+D. AI Data Center’s Computational Efficiency
+Let’s assume an AI data center is using an NVIDIA HGX 200, with each GPU capable of performing 1.44x1017
+FLOPs. Determine the ratio of FLOPs of computation per watt of GPU power consumption.
+2.1 x 1014 FLOPs/Watt
+E. Human vs AI Data Center Computational/Energy Efficiency
+How many times greater is the ratio of FLOPs/watt of the human brain compared to an AI data center?
+The human brain is approx. 13,446 times more energy efficient!
+Source: https://craft.stanford.edu/resource/is-ai-more-efficient-than-the-human-brain/
+Defining intelligence: two models
+One general intelligence: people with
+high intelligence perform well across
+many disciplines
+Multiple intelligences: not supported
+empirically in humans. There are
+cognitive domains/talents (memory,
+reasoning, spatial or mathematical skills)
+where some excell -> "narrow AI"
+Intelligence
+• Can animals be intelligent truly?
+https://www.youtube.com/watch?v=IQW_K8rq1N4
+https://www.youtube.com/watch?v=ZHpu7ngQxwE
+Defining intelligence
+In 2007, Legg and Hutter summarized roughly 70 definitions from the
+literature into a single statement:
+“Intelligence measures an agent’s ability to achieve goals in a wide
+range of environments.”
+“achieving goals” “in a wide range of environments”
+Undwer this view, an intelligent agent would achieve high skill across
+many different tasks
+Defining intelligence
+Marvin Minsky, The Society of Mind, 1986
+Alan Turing's Imitation Game
+Can machines think?
+Instead: "Can
+machines do what we
+(as thinking entities)
+can do?"
+These used to be considered AI:
+• Playing Checkers and Chess (at non-elite levels): Game-playing was the benchmark for
+intelligence (e.g., early chess programs). Now: Only superhuman performance is considered AI-
+worthy; basic play is trivial.
+Shift point: After Deep Blue (1997), chess engines became “just algorithms.”
+• Search and Information Retrieval: Early search engines were seen as exhibiting intelligence—
+finding relevant information from huge datasets.
+Shift point: Web-scale search in the late 1990s–2000s.
+• Spell Checking & Grammar Correction: Detecting spelling or grammatical mistakes was viewed
+as linguistic intelligence.
+Shift point: 1980s–1990s word processors.
+• Optical Character Recognition (OCR): Teaching a machine to “read” printed text was
+considered a major AI milestone.
+Shift point: 1990s–2000s mass digitization.
+These used to be considered AI:
+• Face Detection (not recognition): Detecting a human face in an image felt highly intelligent.
+Shift point: Early 2000s (e.g., digital cameras with face boxes).
+• Speech-to-Text (Basic Dictation): Converting spoken language into text was a core AI challenge.
+Shift point: 2010s with reliable mobile dictation.
+• Recommendation Systems (Simple Collaborative Filtering): Suggesting movies or products seemed AI-
+like. Now: Basic personalization; only advanced models draw attention.
+Shift point: Late 2000s.
+• Industrial Robotics (Fixed Tasks): Robots assembling cars were described as “intelligent machines.”
+Shift point: When their lack of adaptability became obvious.
+• Generative AI
+Programs that could generate text and images based on a prompt were
+considered to be close to AGI.
+Shift point: When their lack of adaptability becomes obvious???
+Recap
+Although we are able to engineer systems that perform extremely well on
+specific tasks ("narrow AI"), they have still stark and dangerous limitations.
+data-hungry / data dependant
+energy hungry
+unable to make sense of situations that deviate from their training data
+Moravec's paradox
+Can we build more intelligent
+systems if we understand our
+own intelligence first?
+What is cognitive science?
+The study of mental process
+• Perception
+• Personality
+• Language
+• Attention
+• Learning and memory
+Cognition is the process by which the sensory input is transformed,
+reduced, elaborated, stored, recovered, and used (Neisser, 1967)
+Work from Cognitive Psicology has informed and influenced
+virtually all other areas of Psychology and AI!
+Example: Perception
+Example: Attention
+Selective attention test
+https://www.youtube.com/watch?v=vJG698U2Mvo
+Gradual Change test
+https://www.youtube.com/watch?v=1nL5ulsWMYc
+Q: Is this a desirable feature for artificially intelligent systems?
+Example: Personality
+• Example: Personality
+• Personality (extroverted, polite, persistent, curious...) influences our
+thoughts and actions
+• Study: surprising links between human cognition and personality (millions
+of people across 50+ countries)
+• E.g., those who were more compassionate tended to have better verbal
+and quantitative knowledge skills, suggesting a connection between
+personality traits and how we learn.
+Example: Emotions
+https://nba.uth.tmc.edu/neuroscience/m/s4/chapter06.html
+Example: Language
+Garden-path sentences:
+• The old man the boat.
+• The complex houses married and single soldiers and their families.
+• Fat people eat accumulates.
+Q: Why do we have trouble reading sentences such as this one?
+I.e., how does the parsing of a sentence work?
+Your move
+• Examples of real world applications –
+Research into Attention:
+Research into Long term memory & Learning:
+Research into Language:
+Perception & Short term memory: Improvements in human-
+computer interaction
+
+------------------------------------
+
+
+FILE: S02_JM_neurons (2).pdf
+SECTION: S02_JM_neurons (2)
+
+CONTENT:
+Session 3 Recap
+● Types of artificial neurons:
+● How do we determine whether they fire or not?
+● Preceptron learning rule
+● Limitations of the Preceptron:
+● Biological neurons:
+Explore solutions
+Identify problem
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+Session 4: Multi-layer perceptrons
+- Introduction to feedforward networks (simple neural networks)
+●
+- Loss functions and optimization
+●
+- Gradient Descent
+●
+- Backpropagation
+●
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+Some points are too close to it
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+So far, we have used the step function
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+Loss function: How wrong are we?
+In 3D, but it is
+actually in many
+● 𝐽 𝑤 𝐽(𝑤1, 𝑤2, 𝑤3…, 𝑏)
+MSE = (1/n) * Σ(yᵢ - ȳ)²
+dimensions
+loss
+function Loss
+w
+w1
+w2
+Loss function: How wrong are we?
+● 𝐽 𝑠𝑙𝑜𝑝𝑒, 𝑖𝑛𝑡𝑒𝑟𝑐𝑒𝑝𝑡
+Think of OLS: you want to minimize
+the square of the residuals
+loss function Grade
+Residuals
+intercept Hours studied
+You would repeat this this for the slope. But in reality, all weights (slope and intercept in OLS) interact with each
+other, and the optimization takes place with all weights simultaneously
+Loss function: How wrong are we?
+● 𝐽 𝑠𝑙𝑜𝑝𝑒, 𝑖𝑛𝑡𝑒𝑟𝑐𝑒𝑝𝑡
+Think of OLS: you want to minimize
+the square of the residuals
+loss function Grade
+Residuals
+intercept Hours studied
+You would repeat this this for the slope. But in reality, all weights (slope and intercept in OLS) interact with each
+other, and the optimization takes place with all weights simultaneously
+Gradient descend: optimization
+We keep changing w till we
+𝑑𝐽(𝑤)
+● 𝑤 = 𝑤 − 𝑙𝑟
+𝑑𝑤 minimize the loss function.
+Loss
+Loss
+w
+Local min
+Gradient = direction of steepest increase.
+We want decrease in slope → move in the
+W1 W2
+opposite direction.
+Gradient descend: 2 weights
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+Learning rate (lr)
+How much w varies with every fail
+𝑑𝐽(𝑤)
+● 𝑤 = 𝑤 − 𝑙𝑟
+𝑑𝑤
+loss function
+w w w
+Too small learning rate Too small learning rate Too large learning rate
+Too slow learning stuck at local min Unable to find mínima, or too slow
+Exercise:
+● Go to tensoflow playground
+● Select the XOR problem
+● Select the two first input features x1 and x2. How many neurons do you think
+you will need?
+● Set different learning rates and see the result.
+● Can the learning rate prevent us from reaching a solution?
+Gradient descent vs Preceptron rule learning
+● https://drive.google.com/file/d/141GQmooEQD1hrsKBnoCTxH0Tnr1mi26C/vi
+ew?usp=sharing
+● Open the perceptron_vs_gradient_descent_v2.ipynb in Blackboard
+● Experiment changing the offset and std of the blobs. E.g.
+X, y = make_separable_blobs(n_per_class=250, mean_offset=1, std=0.7)
+Recap of los and gradient descent
+● Loss: measures how bad the model is (e.g. MSE, binary cross entropy, DICE...)
+● When the slope of the tangent is close to 0, we take baby steps.
+● When the slope of the tangent is high, we take large steps.
+● The size of the step is proportional to the slope and the learning rate.
+𝑑𝐽(𝑤)
+𝑤 = 𝑤 − 𝑙𝑟
+𝑑𝑤
+● Can get stuck in local minima.
+● Can descend slowly on flat regions.
+● Gradient descent stops when the slope is close to 0 (<0.001).
+● Or after a max number of steps = 1000.
+Stochastic gradient descent
+Stochastic gradient descent selects a random subset of data at every step, so we
+don't have to go through all the data
+Use ONE random example at a time to compute the gradient.
+Much faster, but noisier steps
+Loss
+w
+Stochastic gradient descent
+● Counterintuively more efficient
+The loss is just a function of W
+W is the full set of weights
+L = loss
+a
+lla
+how much each weight contributed
+b
+y
+D to the final error at each neuron?
+.
+L
+:
+t
+id
+e
+r
+C
+Backpropagation
+● Backpropagation is the algorithm
+that computes the gradient of the
+loss function with respect to every
+weight and bias in a neural network,
+by repeatedly applying the chain
+rule layer by layer from the output
+back to the input.
+● Optional material
+https://www.youtube.com/watch?v=Ilg3gGewQ5U
+https://www.youtube.com/watch?v=Ilg3gGewQ5U
+http://neuralnetworksanddeeplearning.com/chap2.html
+Every weight affects the
+Back propagation
+final loss indirectly through
+multiple layers.
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+a
+lla
+b
+y
+D
+.
+L
+:
+t
+id
+e
+r
+C
+Next session
+The rate at which 𝑦 changes with respect to 𝑥
+The chain rule
+is the rate at which 𝑦 changes with respect to 𝑢,
+times the rate at which 𝑢changes with respect to 𝑥.
+
+------------------------------------
+
+
+FILE: S02_JM_neurons.pdf
+SECTION: S02_JM_neurons
+
+CONTENT:
+Learning in neural networks
+How can artificial neurons automatically learn patterns?
+e
+tu
+tits
+n
+I
+n
+e
+llA
+/n
+a
+m
+llo
+C
+ts
+e
+rr
+o
+F
+:tid
+e
+rC
+How to learn the decision boundary automatically?
+We need an algorithm for that: enter the Perceptron
+(Rosenblatt, 1957)
+e
+c
+n
+e
+g
+ille
+tn
+I
+la
+ic ifitrA a id
+e
+p
+,n
+o
+ik
+iW
+ts
+n
+iW
+:tid
+Frank Rosenblatt
+e
+rC
+e
+c
+n
+e
+g
+input vector x to the weight vector.
+ille
+tn
+input vector x from
+I
+la
+ic
+ifitrA
+,n
+o
+ts
+n
+iW
+:m
+o
+rf
+d
+e
+tp
+a
+d
+A
+https://es.wired.com/articulos/conoce-a-frank-rosenblatt-creador-de-la-primera-inteligencia-artificial
+The perceptron in action
+Example: logical OR
+e
+c
+n
+e
+g
+ille
+tn
+I
+la
+ic
+ifitrA
+,n
+o
+ts
+n
+iW
+-1 :m
+o
+rf
+d
+e
+tp
+a
+d
+A
+The perceptron in action
+Example: logical OR
+0
+0
+1
+e
+c
+n
+e
+g
+ille
+tn
+I
+la
+ic
+ifitrA
+,n
+o
+ts
+n
+iW
+-1 :m
+o
+rf
+d
+e
+tp
+a
+d
+A
+The perceptron in action
+Example: logical OR
+0
+0
+0
+0
+0
+1
+e
+c
+n
+e
+g
+ille
+tn
+I
+la
+ic
+ifitrA
+,n
+o
+ts
+n
+iW
+-1 :m
+o
+rf
+d
+e
+tp
+a
+d
+A
+The perceptron in action
+Example: logical OR
+0
+0
+0
+0
+-1
+0
+1
+e
+c
+n
+e
+g
+ille
+tn
+I
+la
+ic
+ifitrA
+,n
+o
+ts
+n
+iW
+-1 :m
+o
+rf
+d
+e
+tp
+a
+d
+A
+The perceptron in action
+Example: logical OR
+0
+0
+input vector x to the weight vector.
+0 input vector x from
+0
+-1
+0
+1
+e
+c
+n
+e
+g
+ille
+tn
+I
+la
+ic
+ifitrA
+,n
+o
+ts
+n
+iW
+-1 :m
+o
+rf
+d
+e
+tp
+a
+d
+A
+The perceptron in action
+Example: logical OR
+0
+1
+1
+e
+c
+n
+e
+g
+ille
+tn
+I
+la
+ic
+ifitrA
+,n
+o
+ts
+n
+iW
+-1 :m
+o
+rf
+d
+e
+tp
+a
+d
+A
+The perceptron in action
+Example: logical OR
+0
+0
+input vector x to the weight vector.
+1
+0
+-1
+0
+1
+e
+c
+n
+e
+g
+ille
+tn
+I
+la
+ic
+ifitrA
+,n
+o
+ts
+n
+iW
+-1 :m
+o
+rf
+d
+e
+tp
+a
+d
+A
+The perceptron in action
+Example: logical OR
+input vector x to the weight vector.
+-1
+e
+c
+n
+e
+g
+ille
+tn
+I
+la
+ic
+ifitrA
+,n
+o
+ts
+n
+iW
+-1 :m
+o
+rf
+d
+e
+tp
+a
+d
+A
+The perceptron in action
+Example: logical OR
++ 0 = 0
++ 1 = 1 input vector x to the weight vector.
++ 1 = 1
+e
+c
+n
+e
+g
+ille
+tn
+I
+la
+ic
+ifitrA
+,n
+o
+ts
+n
+iW
+-1 :m
+o
+rf
+d
+e
+tp
+a
+d
+A
+The perceptron in action
+Example: logical OR
++ 0 = 0
++ 1 = 1 input vector x to the weight vector.
++ 1 = 1
+Geometrically:
+e
+c
+n
+e
+x
+2
+g ille
+tn
+I
+la
+ic
+1
+ifitrA
+,n
+o
+ts
+n
+iW
+-1 :m
+o
+0
+x
+rf
+d
+w 0 1 1 e tp
+a
+d
+A
+The perceptron in action
+Example: logical OR
+0
+1
+1
+0
+1
+1
+e
+c
+n
+e
+g
+ille
+tn
+I
+la
+ic
+ifitrA
+,n
+o
+ts
+n
+iW
+-1 :m
+o
+rf
+d
+e
+tp
+a
+d
+A
+The perceptron in action
+Example: logical OR
+0
+1
+0
+1
+0
+0
++1
+1
+1
+1
+e
+c
+n
+e
+g
+ille
+tn
+I
+la
+ic
+ifitrA
+,n
+o
+ts
+n
+iW
+-1 :m
+o
+rf
+d
+e
+tp
+a
+d
+A
+The perceptron in action
+Example: logical OR
+0
+1 input vector x to the weight vector.
+input vector x from
++1
+1
+e
+c
+n
+e
+g
+ille
+tn
+I
+la
+ic
+ifitrA
+,n
+o
+ts
+n
+iW
+-1 :m
+o
+rf
+d
+e
+tp
+a
+d
+A
+The perceptron in action
+Example: logical OR
+0
+1
+1
+1
+1
+1
+e
+c
+n
+e
+g
+ille
+tn
+I
+la
+ic
+ifitrA
+,n
+o
+ts
+n
+iW
+-1 :m
+o
+rf
+d
+e
+tp
+a
+d
+A
+The perceptron in action
+Example: logical OR
+0
+1
+0
+1 input vector x to the weight vector.
+1 input vector x from
+1
++1
+1
+1
+1
+e
+c
+n
+e
+g
+ille
+tn
+I
+la
+ic
+ifitrA
+,n
+o
+ts
+n
+iW
+-1 :m
+o
+rf
+d
+e
+tp
+a
+d
+A
+The perceptron in action
+Example: logical OR
+0
+0
+1
+0
+1
+1
+e
+c
+n
+e
+g
+ille
+tn
+I
+la
+ic
+ifitrA
+,n
+o
+ts
+n
+iW
+-1 :m
+o
+rf
+d
+e
+tp
+a
+d
+A
+The perceptron in action
+Example: logical OR
+0
+0
+0
+1 input vector x to the weight vector.
+0
+0
++1
+1
+1
+1
+e
+c
+n
+e
+g
+ille
+tn
+I
+la
+ic
+ifitrA
+,n
+o
+ts
+n
+iW
+-1 :m
+o
+rf
+d
+e
+tp
+a
+d
+A
+The perceptron in action
+Example: logical OR
+0- 0 = 0
+1- 0 = 1 input vector x to the weight vector.
+input vector x from
+1- 1 = 0
+e
+c
+n
+e
+x
+2
+g ille
+tn
+I
+la
+ic
+1
+ifitrA
+,n
+o
+ts
+n
+w iW
+-1 :m
+o
+0
+x
+rf
+d
+0 1 1 e tp
+a
+d
+A
+The perceptron in action
+Example: logical OR
+0
+0
+0
+1 input vector x to the weight vector.
+1 input vector x from
+1
++1
+0
+0
+1
+e
+c
+n
+e
+g
+ille
+tn
+I
+la
+ic
+ifitrA
+,n
+o
+ts
+n
+iW
+-1 :m
+o
+rf
+d
+e
+tp
+a
+d
+A
+The perceptron in action
+Example: logical OR
+0
+1
+0
+1 input vector x to the weight vector.
+0
+0
+-1
+0
+0
+1
+e
+c
+n
+e
+g
+ille
+tn
+I
+la
+ic
+ifitrA
+,n
+o
+ts
+n
+iW
+-1 :m
+o
+rf
+d
+e
+tp
+a
+d
+A
+The perceptron in action
+Example: logical OR
+0+ 1 = 1
+1+ 0 = 1 input vector x to the weight vector.
+x
+2
+0+ 1 = 1
+e
+c
+1 n e
+g
+ille
+tn
+I
+la
+ic
+ifitrA
+0 ,n
+x o
+0 1 1 ts
+n
+iW
+-1 :m
+w o
+rf
+d
+e
+tp
+a
+d
+A
+The perceptron in action
+Example: logical OR
+1
+1
+1
+1 input vector x to the weight vector.
+0 input vector x from
+0
++1
+1
+1
+1
+e
+c
+n
+e
+g
+ille
+tn
+I
+la
+ic
+ifitrA
+,n
+o
+ts
+n
+iW
+-1 :m
+o
+rf
+d
+e
+tp
+a
+d
+A
+The perceptron in action
+Example: logical OR
+1
+1
+1
+1 input vector x to the weight vector.
+1 input vector x from
+1
++1
+1
+1
+1
+e
+c
+n
+e
+g
+ille
+tn
+I
+la
+ic
+ifitrA
+,n
+o
+ts
+n
+iW
+-1 :m
+o
+rf
+d
+e
+tp
+a
+d
+A
+The perceptron in action
+Example: logical OR
+1
+0
+0
+1 input vector x to the weight vector.
+0 input vector x from
+0
++1
+1
+1
+1
+e
+c
+n
+e
+g
+ille
+tn
+I
+la
+ic
+ifitrA
+,n
+o
+ts
+n
+iW
+-1 :m
+o
+rf
+d
+e
+tp
+a
+d
+A
+The perceptron in action
+Example: logical OR
+1- 0 = 1
+1- 0 = 1 input vector x to the weight vector.
+input vector x from
++1
+1- 1 = 0
+e
+c
+n
+e
+g
+ille
+tn
+I
+la
+ic
+ifitrA
+,n
+o
+ts
+n
+iW
+-1 :m
+o
+rf
+d
+e
+tp
+a
+d
+A
+The perceptron in action
+Example: logical OR
+1 Done!
+1
+x
+2
+0
+e
+c
+1 n e
+g
+ille
+tn
+w
+I
+la
+ic
+ifitrA
+0 ,n
+x o
+0 1 1 ts
+n
+iW
+-1 :m
+o
+rf
+d
+e
+tp
+a
+d
+A
+The perceptron convergence procedure is amazing
+● On the surface, it is strange that the perceptron convergence
+procedure ever succeeds.
+● You would think that, each time it makes a change to improve the
+handling of one particular sample, that change could ruin what is
+done to other samples.
+e
+c
+n ● And yet, it is not hard to prove mathematically that it will
+e
+g
+ille
+tn always converge if the data are linearly separable!
+I
+la
+ic
+ifitrA
+More info here (optional material for this course)
+,n
+o
+ts
+n
+iW
+:m
+o
+rf
+d
+e
+tp
+a
+d
+A
+https://havi-muro.github.io/ML_demos/learning
+Q: what
+happens if a
+perfect
+separator does
+not exists?
+What else can perceptrons do?
+Perceptrons can learn to identify individual digits:
+e
+c
+n
+e
+g
+ille
+tn
+I
+la
+ic
+ifitrA
+,n
+o
+ts
+n
+iW
+:m
+o
+rf
+d
+e
+tp
+a
+d
+A
+What else can perceptrons do?
+Perceptrons can learn to identify images:
+e
+c
+n
+e
+g
+ille
+tn
+I
+la
+ic
+ifitrA
+,n
+o
+ts
+n
+iW
+:m
+o
+rf
+d
+e
+tp
+a
+d
+A
+What else can perceptrons do?
+E.g.: perceptrons can learn to identify simple images
+Is this an "8"?
+…
+Perceptrons can only identify
+1 class vs. others, so each digit
+would need its own neuron
+What else can perceptrons do?
+Perceptrons can (sometimes) even learn to classify complex images:
+What needs to be true for
+this to succeed?
+Link: Perceptron Research from the 50's & 60's, clip
+But… often its solution won't adapt well to more samples
+Important note:
+Depending on the order in which the algorithm
+traverses the training samples, it might reach different
+solutions that correctly separate the data!
+run #1
+Some are "better" than others… how?
+run #2
+run #3
+No notion of "optimality" of a solution
+But… there are simple tasks that perceptrons cannot do
+But… there are simple tasks that perceptrons cannot do
+Even a single point can prevent the perceptron from ever reaching a solution!
+But… there are simple tasks that perceptrons cannot do
+The exclusive-or (XOR) operator:
+"one or the other, but not both"
+But… there are simple tasks that perceptrons cannot do
+)n
+a
+y s
+e ls e n o
+W
+(
+id
+r tp
+e
+e c
+rfn r
+e
+a M P
+.V
+&
+https://rodsmith.nz/wp- ,tr
+e
+IA
+,n
+content/uploads/Minsk p a
+P
+o
+ts y-and-Papert- &
+n
+iW y
+:m Perceptrons.pdf k s
+o n
+rf
+d e Which patterns are connected vs. disconnected?
+iM
+tp
+a
+d
+A
+Biological neural networks
+How do our own neurons learn?
+How do our own neurons learn?
+● The changing and shaping of connections in our brain is known as synaptic plasticity
+● To understand how this happens, let's dig into how biological neurons communicate.
+Credit: https://www.youtube.com/watch?v=-mHgPfXHzJE, https://www.youtube.com/watch?v=KM3xUxkj-3o
+How do our own neurons learn?
+BrainFacts.org
+Credit: L. White (Duke, coursera.org)
+What happens when the firing of a neuron A leads to the firing of a neuron B:
+neuron A fires
+neuron B
+neuron A
+synapse
+Image credit: https://www.youtube.com/watch?v=-mHgPfXHzJE
+What happens when the firing of a neuron A leads to the firing of a neuron B:
+neuron B fires
+neuron B
+"postsynaptic"
+neuron A
+"presynaptic"
+synapse
+Image credit: https://www.youtube.com/watch?v=-mHgPfXHzJE
+Scenario 1: neuron B consistently fires just after neuron A in other words, a spike in A
+contributes directly to a spike in B
+long-term
+potentiation
+excitatory
+postsynaptic
+current
+action potential in the action potential in the Amplitude of the postsynaptic current (strength of the connection):
+presynaptic cell (A) postsynaptic cell (B) Following some structured stimulation period ("training") where neuron B
+consistently fires after A, an increase of about 40% is observed.
+Credit: L. White (Duke, coursera.org)
+Scenario 2: neuron B consistently fires just before neuron A
+effect of A on B
+is reduced
+long-term
+depression
+excitatory
+postsynaptic
+current
+action potential in the action potential in the
+postsynaptic cell (B) presynaptic cell (A) Notice that now there is a weakening of the connection between A and B:
+this is what happens when the postsynaptic neuron is influenced to fire by
+some other input (not neuron A).
+Credit: L. White (Duke, coursera.org)
+STDP: Spike-Timing Dependent Plasticity
+if the presynaptic input
+leads to the firing of the
+LTP postsynaptic cell, this may lead
+to strong Long-Term Potentiation…
+20 ms
+provided that B fires very
+soon after A!
+Credit: L. White (Duke, coursera.org)
+STDP: Spike-Timing Dependent Plasticity
+LTP
+if B fires due to some other
+input just before A fires,
+this may lead to Long-Term
+Depression instead:
+LTD
+Note: in order for LTD to happen, the synapse has to
+be used, but out of synchrony (a "near miss").
+If it's not used, it may stay unchanged!
+Credit: L. White (Duke, coursera.org)
+https://www.youtube.com/watch?v=vZ1P1CVfCNc
+A brain cell reaching out for connections #science
+How can all this help us learn?
+● What we just saw showed that structured inputs (coordinated in time) lead to
+strengthening (Long Term Potentiation) of connections
+● And that "noisy" uncoordinated activity patterns lead to weakening (Long Term
+Depression)
+● So our brain imposes a temporal filter on its own activity patterns, as a way of
+selecting those that lead to an increase in coordination of firing across synaptic
+connections.
+● One way to impose this is through interactions with the environment!
+Source: L. White (Duke, coursera.org)
+How can all this help us learn?
+● In a developing brain, sensory experience might be one source of structure
+that favor the potentiation of synaptic connections;
+● whereas the noise (irrelevant structure) may lead to the "pruning" of synaptic
+connections that are not functional.
+BrainFacts.org
+AI that supplies answers too early prevents from:
+• experimenting
+• forming hypotheses
+• generating their own predictions
+• discovering patterns
+Source: L. White (Duke, coursera.org)
+● One of the first people to think about the plastic nature of the brain was
+Canadian psychologist Donald Hebb (1904-1985).
+● In The Organization of Behavior (1949), he proposed:
+○ coordinated activity of a presynaptic terminal and a postsynaptic cell
+would strengthen the synaptic connection between them
+○ conversely, uncoordinated activity between synaptic partners would
+weaken their synaptic connections
+○ “neurons that fire together, wire together”
+○ "out of sync, lose the link"
+● experimentally proven to be informative in understanding the cellular
+mechanisms of synaptic change only many years later, in the 70s and 80s
+Types of Learning
+● Reinforcement learning
+○ Learning through rewards in uncertain environments
+● Unsupervised learning
+○ Learn statistical regularities and build internal categories
+automatically i.e. faces, voices stand out
+○ Dimensionality reduction (PCA)
+○ Higher brain areas predict what lower areas should see
+○ Modern unsupervised ML has shifted toward self-supervised
+learning (SSL): the model predicts missing parts of its own input.
+● Supervised learning
+○ Learn from training data, labels.
+Summary – how biological neurons learn
+○ “Neurons that fire together, wire together”
+○ "Out of sync, lose the link"
+We can now restate it in more technical terms:
+● changes in synaptic strength (consistent with Hebb's postulate)
+are mediated by long-term potentiation (LTP) and long-term
+depression (LTD)
+● spike-timing dependent plasticity (STDP) explains how synaptic
+change can occur one spike at a time under physiological
+conditions in neural networks
+https://www.youtube.com/watch?v=-wakk5Iwqj8
+If you would like to learn more:
+Many great resources online!
+https://pll.harvard.edu/series/fundamentals-neuroscience
+https://www.coursera.org/learn/medical-neuroscience/
+Beautiful video about how synapses work:
+https://youtu.be/OvVl8rOEncE?t=69
+Next time: how to improve the perceptron?
+Connecting multiple neurons together…
+Session 4: Multi-layer perceptrons
+- Introduction to feedforward networks (simple neural networks)
+- Loss functions and optimization
+- Stochastic Gradient Descent
+- Backpropagation
+How does that work mathematically?
+● labels are 1 or -1
+● calculate difference label - prediction y - y ^
+n n
+● y' depends on w 0, y = yn^
+n
+y - y ^=
+● reduce w if y' is too large n n 2, y = 1, y ^ = -1
+n n
+● increase if w' is too small -2, y = -1, y ^ = 1
+n n
+Q: if y-y^ = 0,
+x
+n w
+n what happens to w?
+… …
+x w w=w+α(y −y ^)x Q: if y-y^ = 2,
+2 2 n n
+what happens to w?
+n
+w
+1 y'
+x
+1
+Q: if y-y^ = -2,
+w
+0
+what happens to w?
+1
+
+------------------------------------
+
+
+FILE: S03 - LD - Learning.pdf
+SECTION: S03 - LD - Learning
+
+CONTENT:
+Recap I
+Preceptron learning rule Preceptron learning rule
+Loss function and gradient descent
+LT depression or
+LT potentiation
+Backpropagation
+Recap II
+Session 5:
+Developping Brains
+vs training ANNs
+● How do the
+○ loss function
+○ learning rate
+○ gradient descent
+○ backpropagation
+○ bias & variance
+○ regularization
+● relate to brain development?
+Why compare them?
+Training ANN is less efficient when
+compared to human brain
+But ANN excell in speed
+in other tasks:
+image generation, text
+summarizing
+Training the brain: organoids
+❑ Stem cells are promted to become neurons
+❑ Neurons aggregate to form these organoids
+❑ Attached to electrodes to ineract with them
+❑ Rewarded with dopamine
+❑ Store bits of information and logical
+operators (AND, OR)
+❑ 120 different types of neurons
+❑ Challenges: vascularization, short life span
+and ethics
+Biocomputers made from human brain cells could run the AI
+systems of the future
+Questions
+❑ Can we develop different algorithms for learning in organoids? (preceptron
+rule 1975, backpropagation 1962, xxxx 2027?)
+❑ Can organoids be upscaled?
+❑ compostable, efficient...
+❑ How can ANN concepts:
+❑ loss function,
+❑ gradient descent,
+❑ backpropagation,
+❑ learning rate,
+❑ regularization,
+❑ bias vs variance,
+❑ weight initialization...
+be mapped to human processes?
+The connectionist approach: pros and cons
+1. Biolog. and ANN share general structural and functional characters: nodes-soma,
+link-axon, activation function-firing mechanisms, parallel processing
+2. Learning via the adjustment of the weights - vs LTP
+3. React to damage with graceful degradation: gradual decrease in performance with
+increased damage.
+4. Generalization, pattern completion, hallucinations, superstitions
+5. Interference: two sets of similar info interfere with each other (study two languages)
+1. Biological neurons are way more complex
+2. ANN estabilize after converging to a solution, whereas biol. neurons are oscilatory
+3. Catastrophic forgetting: an ANN has learned to recognize a set of patterns and
+then is called on to learn a new set.
+4. No backpropagation in biological networks.
+Friedenberg, Cognitive Science: An Introduction to the Study of Mind p 201
+.
+Loss function
+❑ What we want to minimize.
+❑ In nature, environments are non-stationary, so
+the “objective” itself can change with context
+and development.
+❑ Eg: Adolescents might prioritize finding
+partner/safety in group (minimize rejection),
+gonadal hormones interact with dopamine,
+presence of peers increase risk taking.
+❑ Locusts change from solitary to gregarious
+when food becomes scarce.
+https://www.youtube.com/shorts/pNSKPLRon2o
+Stochastic gradient descent
+❑ Iterative process of adjusting connection weights
+to find the "minimum" of the loss function.
+❑ Humans learn incrementally by informed trial
+and error
+❑ Exploratory methods or "whims": Humans often
+find solutions through a sudden change of mind
+or curiosity.
+❑ Lévy walk—many short movements in a narrow
+area followed by occasional long, random leaps
+to distant areas, avoids getting stuck in local
+minima.
+Learning rate
+❑ Stubborn vs gullible
+❑ We have metacognition: adjust learnign rate.
+❑ Bayesian updating: weight that decides how
+much to trust the new measurement vs. the
+prior. When measurements are reliable or the
+world is changing fast, the gain (learning rate)
+rises; when measurements are noisy or the
+world is stable, it falls.
+❑ Pupil excitement when learning: Surprise
+facilitates learning.
+Fundamentals of Cognitive Neuroscience. Nicole Gage and Bernard Baars p 476
+Surprise-based learning
+An event that breaks expectations
+(surprising) is more memorable for
+humans (Mandler 2014).
+Inspired by this, a simple definition of
+surprise for a model can be its gradient
+with respect to the input.
+https://research.google/blog/titans-miras-helping-ai-have-long-term-memory/
+Back propagation
+❑ No evidence that biological networks can feed
+an error signal for modifying connection
+strengths any further back than the immediately
+preceding layer of neurons.
+❑ We can distribute blame/credit: debug, analyze
+what part of the reasoning failed
+❑ Can we implement backpropagation in brain
+organoids?
+Additional ML concepts
+● Bias vs Variance
+● Regularization
+Bias and Variance
+Blue: training
+Squiggly line has 0 variance
+straight line has bias and
+some variance
+Green: test
+In test, the straight line has
+some bias and variance, but
+the squigly line has a very
+high variance
+StatQuest: https://www.youtube.com/watch?v=Q81RR3yKn30
+Bias & Variance
+Regularization
+❑ Prevent overfit by impossing a penalty/limitation during training ==> reduce
+variance and make the predictions less sensitive to the training data
+❑ Other regularizarion techniques:
+❑ Limit number of epochs (iterations)
+❑ Data augmentation or undersampling
+❑ Noise injection
+❑ Drop out (robustness through redundancy)
+Regularization: L1 or L2
+● Imposing a small penalty in training
+StatQuest: https://www.youtube.com/watch?v=Q81RR3yKn30
+Bias and its evolutionary mechanisms
+Bias is not inherently bad because it
+often serves a functional or adaptive
+purpose:
+1) Survival Utility
+Bias and its evolutionary mechanisms
+2) Cognitive Efficiency, heuristics in a complex world.
+3) Predictive Power in an uncertain world: Natural
+events tend to have regularities
+Bias and its evolutionary mechanisms
+4) Attribution Tendencies: prefer internal or
+dispositional traits as the best explanation
+for others' behavior rather than considering
+the situation.
+5) In group and outgroup bias: stronger
+when resources are limited
+https://www.thoughtco.com/social-identity-theory-4174315
+Bias and its evolutionary mechanisms
+Problems:
+confirmation bias base-rate fallacy sunk-cost fallacy
+https://xkcd.com/2476/
+https://www.reddit.com/r/comics/comments/8jldtn/confirmation_bias_oc/?rdt=61995
+Daniel Amen TedTak: https://www.youtube.com/watch?v=esPRsT-lmw8
+Brain plasticity
+Healthy
+Alzheimer Traumatism Drugs
+Healthy OCD Dementia, before and after rehab
+Brain plasticity
+❑ True long term learning modifies
+your brain
+❑ Cab drivers → geospatial awareness
+❑ Braille → high hand sensitivity
+❑ Right/left handed people
+❑ People learn differently →
+personalized approaches
+❑ Negative effects: forgetting,
+additions, chronic pain,
+Brain plasticity: disgust
+● Innate and learnt
+● Insula and Putamen regions in the brain.
+Nature vs. nurture in humans
+❑ Biological Predispositions: innate skills and preferences
+❑ Epigenetics: sensory input can change gene expression
+❑ Intelligence: 50% 80% genetic, but changes with age
+❑ Wilson Effect
+❑ Postnatal brain volume increases fourfold through
+synaptogenesis and dendritic arborization
+❑ Environmental impact on IQ.
+Genie, the feral child
+Nature vs. nurture in AI
+❑ Good old fashion AI: IF-THEN
+❑ Genetic algorithms
+❑ Protect old knowledge while remaining plastic enough
+❑ Weight adjustment/backprop
+❑ GIGO → Garbage in Garbage out
+Activity: make a summary (table, mind map...)
+● Planes were initially inspired by birds, but we had to find alternatives.
+● ANN were also initially inspired by biological neurons, but we had to find alternatives
+to their mechanisms.
+● Can we now mimick better the behaviour of biological neurons?
+Activity: make a summary (table, mind map...)
+Concept ANN Biological equivalent
+Loss function
+Backpropagation
+Learning
+Forgetting
+Plasticity
+Regularization
+Bias
+Pattern completion
+Metacognition
+Nature vs Nurture
+
+------------------------------------
+
+
+FILE: S04 - JM - MLPs.pdf
+SECTION: S04 - JM - MLPs
+
+CONTENT:
+Session 6: Memory and problem solving
+BSCAI 2026
+Javier Muro
+● How do humans learn from limited examples? Theories of inductive reasoning and
+attention mechanisms.
+● The challenge of generalization in AI: Overfitting, data augmentation
+● Why deep networks often require massive amounts of data to generalize?
+Types of Learning
+● Reinforcement learning
+○ Learning through rewards in uncertain environments
+● Unsupervised learning
+○ Learn statistical regularities and build internal categories automatically
+i.e. faces, voices stand out
+● Supervised learning
+○ Learn from training data, labels.
+How do humans learn?
+Process of transforming temporary synaptic
+connectivities into longer-lasting memories.
+● Episodic: concious episodes linked to a
+place and time
+● Semantic: general knowledge
+● Procedural: skills and habits, often
+unconcious
+Implicit (playing)
+vs
+Explicit (studying)
+Fundamentals of Cognitive Neuroscience. Nicole Gage and Bernard Baars.
+F
+u
+n
+d
+a
+m
+e
+n
+at
+sl
+o
+C
+f
+o
+g
+n
+viti
+e
+N
+e
+u
+r
+o
+s
+c
+ei
+n
+c
+e
+N
+.
+ci
+o
+el
+G
+a
+g
+e
+a
+n
+d
+B
+e
+r
+n
+a
+r
+d
+B
+a
+a
+r
+s
+.
+Semantic memory
+Learning disruptors
+● Stress → strenghtens the amigdala, shifts priorities
+● Sleep deprivation → school start times for adolescents is critical
+● Noise
+● Multitasking
+● Interference: Biological learning is often disrupted by proactive interference
+(earlier info disrupts later learning) and retroactive interference (later info
+disrupts earlier memories).
+● Functional Fixedness/aka tunnel vision: While expertise generally helps
+learning, it can lead to mental rigidity
+● Fobias and PTSD
+Fundamentals of Cognitive Neuroscience. Nicole Gage and Bernard Baars.
+Meta-Gate
+https://metasinternalresearch.org/
+Learning disruptors
+● Short videos are causing a reward deficit disorder
+-top 50% youngsters are more resistant to addiction/slot
+machines apps, they have the capacity to pay attention
+-bottom 50% struggle
+10.02.2026
+Reasoning as primary method for philosophical inquiry
+● Inductive: the brain extracts statistical regularities from the environment to
+form concepts (and to hand with learning)
+● Deductive reasoning involves the application of the rules of logic to
+statements about the world: If this, then that.
+● Abductive: starts with a series of observations and finds the simplest and
+most likely explanation.
+Caveat: ML is probabilistic, not cognitive
+Inductive, deductive and abductive reasoning
+● https://www.menti.com/alvvx8ovx543
+Reasoning as primary method for philosophical inquiry
+● Deductive reasoning involves the application of the rules of logic to
+statements about the world: If this, then that.
+● Inductive: the brain extracts statistical regularities from the environment to
+form concepts.
+● Abductive: starts with a series of observations and finds the simplest and
+most likely explanation.
+Q: problem?
+● Critique: they do not seek empirical evidence → the scientific method
+Reasoning: the scientific method
+● We make observations that led us to ask a question
+● Hypothesis: a testable explanation or reasonable prediction of what will happen
+● Test the hypothesis, try to reject it.
+● Report conclusions
+● Use conclusions to generate new hypothesis
+Reasoning + scientific method
+● Experimental philosophers and the Knobe effect.
+Has the chairman
+Has the chairman
+helped the environment
+harmed the environment
+intentionally?
+intentionally?
+82% yes 23% yes
+This conclusion, could not
+necessarily have been determined a
+priori using pure reasoning
+Back to ML
+● ML needs loads of training data
+● Data augmentation -> apply small variations on existing training data
+● Along with regularization techniques, avoid overfitting
+The machine learning puzzle
+Three pieces:
+Approximation: does a NN that fits my training data?
+Optimization: If it exists, can i find it?
+Generalization: does it work well on unseen data?
+Activation functions
+● Allow neurons to tackle non linear problems
+Approximation
+● We can simplify the activation function to step by setting large weights and
+modifying the bias
+http://neuralnetworksanddeeplearning.com/chap4.html#universality_with_one_input_and_one_output
+Approximation: two inputs
+Approximation wrap up
+● NN can represent any function
+● Can the NN "learn" any function?
+● How easy is it to learn a function? → NN are data hungry
+● How well it performs in the real world? → Generalization
+Generalization
+Egyptian vulture ?
+Egyptian vulture?
+Generalization
+How can NN fit noisy data but generalize well?
+● Underfitting and overfitting
+https://www.youtube.com/watch?v=Kih-VPHL3gA
+Belkin: Reconciling modern ML with bias variance trade off: https://www.youtube.com/watch?v=ZAW9EyNo2fw
+Genralization: double descent
+Generalization
+Bananas vs toasters: adversarial patches: https://www.youtube.com/watch?v=i1sp4X57TL4
+Where do this correlations come from? Shortcuts
+Higher chance of call a mole
+malignant if there was a rule in it
+NN have trouble generalizing
+How can we help them? Regularization
+● Add bias/penalty
+● Drop-out
+NN have trouble generalizing
+How can we help them? Data augmentation I
+● Flip, turn or tweak contrast or light
+improves generalization in image
+recognition
+https://medium.com/@parthdholakiya180/smote-synthetic-minority-over-sampling-technique-4d5a5d69d720
+Data augmentation II
+Oversampling
+Balance the dataset generating new rare samples by using:
+• SMOTE (Synthetic Minority Over-sampling TEchnique):
+Original Generating Resampled
+dataset Sample Dataset
+Data augmentation III: time series
+Introduce noise Split and shuffle
+Window warping
+Source: Time Series Augmentations | Towards Data Science
+How do humans generalize?
+● Similarity based judgement: humans assess how closely a new
+situation resembles a familiar one in a psychological scape relying on
+propotypes
+● Rule based application learnt through induction
+● Abstract structure mapping: we identify the underlying abstract
+relational structure, rather than just its concrete features
+How do humans generalize?
+Two stage process:
+1.- Determining relevance: the brain automatically determines what
+features are relevant.
+2.- Refining representations: Through experience, mental representations
+of these features become more precise, allowing for more efficient,
+abstract and accurate future generalizations
+Opposite of Deep learning: the better we understand something,
+the better we can abstract and generalize to novel scenarios
+Cognitive components
+Metageneralization: we can flexibly switch between different strategies
+such as compositional (breaking down a problem, useful in pseudocode) or
+holistic (conjunctive) approaches depending on the structure of the task.
+https://www.nature.com/articles/s41586-023-06668-3
+Cognitive components
+Efficient coding: we aim for mental efficiency by distilling information into
+simple, essential forms, often priorizing a small subset of features (color,
+shape of ripe fruit) to guide decisions
+https://www.nature.com/articles/s41467-025-58848-6
+Neural components
+Hippocampus: rapid, episodic generalization is thought to rely here, which
+reactivates and integrates existing memories with new experiences
+Recalling past
+experiences
+Fundamentals of Cognitive Neuroscience. Nicole Gage and Bernard Baars.
+
+------------------------------------
+
+
+FILE: S05 - JM - Brains vs. ANNs (2).pdf
+SECTION: S05 - JM - Brains vs. ANNs (2)
+
+CONTENT:
+Session 8: Perception - seeing and hearing
+BSCAI 2026
+Javier Muro
+Recap: Memory
+● Visual cortex encodes an episode
+● MTL binds widespreaad memory traces & semantic associations
+● Visual cortex decodes MTL memory
+● Invariance: A core challenge for CNN is selectivity/invariance, where the
+system must identify an object (like a face) despite changes in angle, lighting,
+or position. We can trick our brain → Tachtcher effect
+The lattent space
+● NNs also encode and decode
+information, creating a latent
+space that store structured
+information
+The lattent space
+If we understand the
+latent space, we
+understand the model's
+decisions
+https://arxiv.org/pdf/2007.
+06570
+Session 8: Perception - seeing and hearing
+● Sensation: transformation of external events into neural activity
+● Sensory adaptation: sensitivity to prolonged stimulations tends to decline
+over time as a organism adapts → stimuli doesn't change
+Perception
+● Sensation: transformation of external events into neural activity
+● Perception: Processing of sensory information
+○ end result: a useful representation of the external objects that produced the sensations
+○ Images in our retina ar 2D
+● Actions: organisms use the reprsentation of the world in order to act on it
+Principles of perceptual organization
+● Perceptual constancy: even as aspects of sensory signals change,
+perceptions remains constant
+○ we can recognize the same object under different conditions, such as changes in illumination,
+distance, or location
+● A a a A
+Fundamentals of Cognitive Neuroscience. Nicole Gage and Bernard Baars.
+Theories of perception: Gestalt principles
+● Proximity
+● Similarity
+● Symmetry
+● Closure: The mind
+completes unfinished
+figures
+● Continuation: Lines are
+seen as following the
+smoothest path.
+Fundamentals of Cognitive Neuroscience. Nicole Gage and Bernard Baars.
+Theories of perception: Bottom up vs Top Down
+● Bottom-Up (Data-Driven): Perception is driven entirely by the physical
+characteristics of the stimulus. Information flows from the senses to higher
+cognitive centers (e.g., feature detection theory where lines and angles
+specify an object).
+● Top-Down (Conceptually Driven): Context, expectations, and higher-level
+knowledge influence how stimuli are perceived.
+Examples of top-down:
+● The Word Superiority Effect: Letters are recognized faster when they are
+part of a meaningful word. WORD vs OWRD
+● Phonemic Restoration: The brain "fills in" missing speech sounds based on
+sentence meaning. Think of many dialects whose speakers miss whole
+syllables.
+A close up of the retina
+Retinal
+Ganglion
+Cell
+It was NN all along!
+Primary Visual Cortex V1
+A V1 simple cell, which becomes orientation-selective
+by combining inputs from multiple Lateral Geniculate
+Nucleus neurons.
+Fundamentals of Cognitive Neuroscience. Nicole Gage and Bernard Baars.
+Hierarchical organization
+Ventral temporal cortex
+LOC is
+much later
+in the
+hierarchy
+A two step process:
+1.- detection of features
+2.- combination of features
+Fundamentals of Cognitive Neuroscience. Nicole Gage and Bernard Baars.
+Activation of neurons
+•
+V1 neurons respond to vertical lines, some to 20º tilted lines, and still others to horizontal lines
+•
+Some respond to a particular direction of motion
+•
+Others respond best to particular colors or color differences, or disparities
+•
+Other neurons inhibit other neurons
+Lateral inhibition in the retina enhances
+the representation of edges by having
+neurons inhibit their neighbors, making the
+system most sensitive to sudden changes
+in light intensity
+A cats neuron (first lecture)
+Lateral inhibition
+● Enhances edges detection.
+● Edges contain most of the structural information
+● Edges are invariant to light
+● High contrast features attract attention: eyeliner, lip liner,
+https://en.wikipedia.org/wiki/Mach_bands
+Mapping orientation selectivity in humans
+Fundamentals of Cognitive Neuroscience. Nicole Gage and Bernard Baars.
+2D to 3D mapping
+● relative size inform us if an object is close or far away,
+● vertical lines that converge in the distance provides sense of depth
+● partial occlusion of an object gives the sense that it is in the background.
+● Binocular disparity
+● Other key cues are lighting, shading, and texture gradients.
+Limitations: Blind spots
+https://faculty.washington.edu/chudler/chvision.html
+Limitations: Crowding
+● The difficulty in recognizing individual objects when they are clustered in the
+periphery of a scene.
+Whitney and Levi (2011).
+Hearing
+https://auditoryneuroscience.com/vocalizations-speech/formants-harmonics
+Spectrograms
+● https://musiclab.chromeexperiments.com/Spectrogram
+Individual neurons
+detect pieces of
+these spectrograms
+Latent spaces
+Early sensory maps are modality-
+specific — vision has orientation and
+spatial frequency maps, while audition
+has tonotopic and temporal feature
+maps.
+But once these features activate
+higher-order neurons, the brain forms
+integrated representations that no
+longer ‘belong’ to a single sense. These
+behave like a combined feature space
+— a shared perceptual scape in which
+meaning, objects, and events are
+represented. They are often described
+in neuroscience as amodal, supramodal,
+or multisensory latent spaces
+Why are we learning all this as computer scientists?
+If we understand how machines perceive commands and interpret
+contexts, we might be able to avoid these:
+https://theshamblog.com/an-ai-agent-published-a-hit-piece-on-me/
+Next class
+● Convolutional neural networks
+● Uses and limitations
+
+------------------------------------
+
+
+FILE: S05 - JM - Brains vs. ANNs.pdf
+SECTION: S05 - JM - Brains vs. ANNs
+
+CONTENT:
+Session 7: Dimensionality reduction
+BSCAI 2026
+Javier Muro
+Recap
+How else can we solve this?
+A linear classifier applied
+to transform data is like a
+non-linear classifier
+applied to raw data
+Question:
+● What other feature-space transformations do you know?
+● AKA latent-space transformations
+Do we need a quick recap on PCA and
+classical dimensionality reduction?
+https://setosa.io/ev/principal-component-analysis/
+PCA recap
+We want to find vectors of
+maximum variance
+Average consumption of 17
+types of food in grams per
+person per week for every
+country in the UK
+PCs are ortogonal to the previous one
+https://setosa.io/ev/principal-component-analysis/
+Find vectors of maximum variance
+To get PC scores, we must
+project the observations onto
+Eigenvectors: direction variance the eigenvectors.
+Eigenvalues: how much variance is along the eigen vector
+https://setosa.io/ev/eigenvectors-and-eigenvalues/
+PCA in images
+● from sklearn.datasets import fetch_olivetti_faces
+PC in images
+● And can be reconstructed
+Hidden layers perform similar operations
+with some differences:
+● PCA is unsupervised, linear separation and maximizes variance
+● NN transformations are supervised and maximize class separation
+● But both learn data structures and reduce their dimensionality (encoding)
+● And transformed data can be reconstructed (decoding)
+Bottom-up from pixels to edges, In facial recognition, the
+then to object parts, and finally machine can "discover"
+to object identity, the network the latent highlights or
+effectively performs features essential for
+dimensionality reduction by identifying a face without
+compressing high-dimensional raw being explicitly told what
+data into low-dimensional they are
+abstract concepts
+Autoencoders
+NN hidden layers: compress to simplify classification
+Encoders: compress to build a compact representation, task agnostic
+Hidden layers recode into only useful discriminative features
+Decoders recode back everything into data space
+Not for prediction, but to learn the
+latent feature space/structure,
+everything that matters for
+understanding the input, not just
+predicting specific labels (and then
+maybe improve predictions with it).
+Simple Explanation of AutoEncoders
+Latent space without structure
+Points are here distrubuted
+randomly across space. We would
+need three
+predictors/axes/coordinates to
+represent each of them.
+But data in nature has
+structure. NN learn that
+structure to constrain the
+information and find solutions
+efficiently.
+Simple Explanation of AutoEncoders
+Constraiend data in the same 3D space
+We don't need 3 coordinates if we transform the data. Only the position along the spiral.
+Latent space demo
+● https://wikipedia2vec.github.io/demo/
+Feature space in the brain
+● Feature Extraction: Much like Deep Learning, the brain extracts low-level features
+(pixels/edges) and combines them into increasingly abstract "latent" representations
+(objects/identities).
+● Dimensionality Reduction: In both biological systems and autoencoders, high-
+dimensional sensory data is compressed into a low-dimensional "bottleneck" (latent
+representation) that retains only the essential features needed to reconstruct or
+recognize the stimulus
+● Multimodal Integration: The hippocampus acts as an integrator, weaving disparate
+sensory fragments—the sight of a cup, the smell of coffee—into a unified episodic
+memory
+● Prediction and Inference: The brain uses predictive coding, generating internal
+expectations about future inputs and using the "error signal" to update synaptic
+weights.
+Perception = Prediction + Error Correction
+Feature space in the brain
+● Hebbian Learning: The fundamental rule for resculpting feature spaces is
+"neurons that fire together, wire together," strengthening synaptic links through
+Long-Term Potentiation (LTP).
+● Sparse Coding: The brain utilizes sparse distributed coding, where a very small,
+highly selective set of neurons (concept cells) responds to specific complex
+stimuli like a celebrity's face, instead of firing all the neurons involved in face
+recognition.
+How do humans generalize?
+● Similarity based judgement: humans assess how closely a new
+situation resembles a familiar one in a psychological scape relying on
+propotypes
+● Rule based application learnt through induction
+● Abstract structure mapping: we identify the underlying abstract
+relational structure, rather than just its concrete features
+How do humans generalize?
+Two stage process:
+1.- Determining relevance: the brain automatically determines what
+features are relevant.
+2.- Refining representations: Through experience, mental representations
+of these features become more precise, allowing for more efficient,
+abstract and accurate future generalizations.
+Opposite of Deep learning: the better we learn something, the
+better we can abstract and generalize to novel scenarios
+Neural components
+Hippocampus: rapid, episodic generalization is thought to rely here, which
+reactivates and integrates existing memories with new experiences
+Cognitive components
+Metageneralization: we can flexibly switch between different strategies
+such as compositional (breaking down a problem, useful in pseudocode) or
+holistic (conjunctive, e.g. fase recognition) approaches depending on the
+structure of the task.
+https://www.nature.com/articles/s41586-023-06668-3
+Cognitive components
+Efficient coding: we aim for mental efficiency by distilling information into
+simple, essential forms, often priorizing a small subset of features (color,
+shape of ripe fruit) to guide decisions.
+https://www.nature.com/articles/s41467-025-58848-6
+Recalling past
+experiences
+Fundamentals of Cognitive Neuroscience. Nicole Gage and Bernard Baars.
+Invariance: A core challenge for CNN is selectivity/invariance, where the
+system must identify an object (like a face) despite changes in angle,
+lighting, or position.
+Our brain learns patterns that might be efficient in some circumstances,
+but deceivable in others.
+Python time! CIFAR-10
+1 Train a CNN
+2 Open the last layer and
+get the embedding
+3 Visualize embeddings using:
+4 Linear probes
+● Run a classification on the embedding, vs on the raw input.
+○ Which one is faster?
+○ which one is more accurate?
+5 See how the model thinks and mapped the latent
+space.
+
+------------------------------------
+
+
+FILE: S06_JM_Memory and problem solving.pdf
+SECTION: S06_JM_Memory and problem solving
+
+CONTENT:
+Session 9: CNN
+BSCAI 2026
+Javier Muro
+Source: Understanding the Convolutional Filter
+Operation in CNN’s | Advanced Deep Learning
+CNNs
+Convolutional NN detect specific patterns in input data (edges, corners, or textures).
+They run a kernel through the data: small weight matrices where we perform the dot
+product. The product is an embedding/feature map
+The kernel is passed over the image
+The kernels can multiply the pixels by
+different values to highlight different
+features
+-Compress information
+-highlight vertical or horizontal edges
+3Blue1Brown:
+https://www.youtube.com/watch?v=KuXjwB4LzSA
+First order
+features.
+Can we learn
+feature maps out
+of feature maps?
+https://www.youtube.com/shorts/N6NBT-n9mmo
+You want to preserve smoother, global information.
+When edges don't matter than much, but textures matter
+Story so far
+Types of problems
+Is super-resolution of satellite imaging really useful? | by Yosef Akhtman | Medium
+Add a photo if your face.
+Playtime!
+CNN Explainer What are you
+Spurious
+associations
+On ImageNet, a widely used dataset
+to pretrain models
+https://arxiv.org/pdf/2212.04871v2
+Interpretability
+A Data Odissey https://www.youtube.com/watch?v=_QiebC9WxOc
+Interpretability
+Summit: Scaling Deep Learning Interpretability by Visualizing Activation
+and Attribution Summarizations
+attribution graphs reveal surprising associations in the network
+Each pixel change must be tiny (magnitud is limited by ε)
+This prevents the perturbation from becoming visible to a human
+Adversarial glasses and patches
+https://arxiv.org/abs/1910.07067
+lm
+th
+.e
+r
+e
+h
+w
+-
+ta
+h
+w
+/e
+r
+e
+Fusiform Face Area (FFA): A specialized h
+w
+-
+module in the fusiform gyrus that
+ta
+h
+w
+responds selectively to human faces /s
+e
+to
+n
+e
+r
+u
+tc
+e
+l/n
+o
+Area V4: Located in the
+itp
+e
+c
+occipital lobe r e
+p
+/s
+e
+s
+r
+u
+o
+c
+/d
+iv
+a
+d
+~
+/u
+d
+e
+.u
+y
+n
+primary visual cortex
+.s
+n
+c
+.w
+lateral geniculate nucleus w
+w
+retinal
+//:s
+p
+tth
+
+------------------------------------

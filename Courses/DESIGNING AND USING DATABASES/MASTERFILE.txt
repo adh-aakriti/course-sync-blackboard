@@ -1,0 +1,998 @@
+COURSE: DESIGNING AND USING DATABASES
+
+This file contains all extracted lecture material for this course.
+Each section corresponds to one downloaded file.
+
+====================================
+
+
+FILE: Session 10 - Mastering SQL Window Functions & CTEs (1).pptx
+SECTION: Session 10 - Mastering SQL Window Functions & CTEs (1)
+
+CONTENT:
+SQL Variables and Advanced Features
+SQL Variables
+SQL variables are placeholders or containers in which you can store values temporarily to use later in your SQL queries. They help in writing more dynamic and reusable SQL code, especially in procedures and scripts.
+Types of SQL Variables:
+User-defined variables: These are variables that you define and use within a session.
+System variables: Predefined variables that control the operation of the MySQL server.
+Session variables: Specific to each session and only exist while the session is active.
+User-Defined Variables
+SET @actor_name = 'PENELOPE';
+SELECT * FROM sakila.actor
+WHERE first_name = @actor_name;
+Using Variables in Calculations
+SET @rental_rate = (SELECT rental_rate FROM sakila.film WHERE title = 'ACADEMY DINOSAUR');
+SELECT title, rental_rate
+FROM sakila.film
+WHERE rental_rate > @rental_rate;
+Session variables and statements
+SET @film_limit = 5;
+PREPARE STMT FROM 'SELECT title, rental_rate
+FROM sakila.film
+LIMIT ?;';
+EXECUTE STMT USING @film_limit;
+Stored Procedures Explanation
+A stored procedure is a precompiled collection of SQL statements and optional control-flow logic that is stored in the database. It can be executed with a single call and allows you to encapsulate complex logic and reuse it across different applications or queries.
+In other words, a stored procedure is a block of SQL code that can include variable declarations, loops, conditionals, and even interactions with the data (like SELECT, INSERT, UPDATE, and DELETE statements). The procedure is stored on the database server and can be executed repeatedly without having to rewrite the SQL code each time.
+Structure
+Structure of a Stored Procedure
+A stored procedure typically has the following structure:
+Parameters: You can pass parameters (inputs) to the procedure and get outputs back.
+Logic: The procedure can contain conditional statements (like IF), loops (like WHILE), and SQL queries.
+Return Values: Procedures can return values or a dataset (result set) after execution.
+Parameters (IN, OUT, INOUT)
+Default type
+Used to pass values INTO the procedure
+Read-only inside procedure
+IN customer_id INT
+OUT total_amount DECIMAL(10,2)
+Declaring Variables
+DECLARE variable_name datatype;
+DECLARE total DECIMAL(10,2);
+DECLARE rental_count INT DEFAULT 0;
+Must be declared at top of BEGIN block
+Scope is inside the procedure
+SELECT INTO (Assigning Values to Variables)
+Store query result inside variable
+SELECT column_name
+INTO variable_name
+FROM table
+WHERE condition;
+Condition Logic
+IF condition THEN
+statement;
+ELSE
+statement;
+END IF;
+Example:
+IF total > 100 THEN
+SET status = 'VIP';
+ELSE
+SET status = 'Regular';
+END IF;
+Cursors (Row-by-Row Processing)
+A cursor allows you to process query results one row at a time.
+Used when:
+Updating row by row
+Complex business logic per record
+Cursor Structure
+DECLARE cursor_name CURSOR FOR
+SELECT column FROM table;
+DECLARE CONTINUE HANDLER FOR NOT FOUND
+SET done = 1;
+OPEN cursor_name;
+FETCH cursor_name INTO variable;
+CLOSE cursor_name;
+Loop Structure
+read_loop: LOOP
+FETCH cursor_name INTO var;
+IF done THEN
+LEAVE read_loop;
+END IF;
+END LOOP;
+WHILE condition DO
+statements;
+END WHILE;
+Example
+DELIMITER //
+CREATE PROCEDURE GetFilmsByRentalRate(IN rate_threshold DECIMAL(4,2))
+BEGIN
+SELECT title, rental_rate
+FROM sakila.film
+WHERE rental_rate > rate_threshold;
+END //
+DELIMITER ;
+Stored procedures
+DELIMITER //
+CREATE PROCEDURE get_frequent_rentals(IN num_rentals INT)
+BEGIN
+DECLARE rental_count INT;
+SELECT COUNT(*)
+INTO rental_count
+FROM sakila.rental
+WHERE film_id = num_rentals;
+SELECT film.title, rental_count
+FROM sakila.film
+WHERE film.film_id = num_rentals;
+END //
+DELIMITER ;
+What Is SQL Injection?
+SQL Injection is a security vulnerability where an attacker inserts malicious SQL code into an input field to manipulate the database.
+It happens when:
+User input is concatenated directly into SQL queries
+No validation or parameterization is used
+Classic Example
+SET @sql = CONCAT(
+'SELECT * FROM customer WHERE email = ''',
+user_input,
+'''');
+‘anything' OR 1=1 –
+SELECT * FROM customer
+WHERE email = 'anything' OR 1=1 --'
+Dynamic SQL with variables
+SET @dynamic_query = 'SELECT title FROM sakila.film WHERE rental_rate > ?';
+PREPARE stmt FROM @dynamic_query;
+SET @rental_rate_limit = 1=1;
+EXECUTE stmt USING @rental_rate_limit;
+DEALLOCATE PREPARE stmt;
+Exercises
+https://docs.google.com/document/d/1tQcT6KhCFQbH-bVO28Qf6IgkKu9UDXBSDWwQh_rKxVg/edit?tab=t.0
+
+------------------------------------
+
+
+FILE: Session 10-11 - Date and Time functions .pptx
+SECTION: Session 10-11 - Date and Time functions 
+
+CONTENT:
+Session 18-19
+Mongo Shell and DJango
+Start mongo
+To start the MongoDB Shell, open your terminal or command prompt and type:
+mongosh
+Or the name you have installed. You may need to add it to the path
+How to use a database
+Once in the MongoDB Shell, you can connect to a specific database using the ‘use command. If the database doesn't exist, MongoDB will create it when you insert data.
+use mydatabase
+Basic commands
+show dbs: Displays a list of all databases on the MongoDB server.
+show collections: Lists all collections in the currently selected database.
+db: Returns the name of the current database.
+db.<collection>: Switches to the specified collection in the current database.
+help: Provides help and documentation for MongoDB Shell commands.
+Let's create a simple document and insert it into a collection:
+// Switch to the desired database
+use mydatabase
+// Insert a document into a collection
+db.mycollection.insertOne({ name: "John Doe", age: 30, city: "New York" })
+Querying documents
+// Find all documents in a collection
+db.mycollection.find()
+// Find documents that match a specific condition
+db.mycollection.find({ age: { $gt: 25 } })
+The $gt operator is used here to find documents where the 'age' field is greater than 25. MongoDB supports a variety of query operators for different conditions.
+Updating Documents
+// Switch to the desired database
+use mydatabase
+// Update a single document
+db.mycollection.updateOne(
+{ name: "John Doe" },
+{ $set: { age: 31, city: "San Francisco" } }
+)
+Explanation
+In this example, we use the updateOne method to update the document with the name "John Doe." The $set operator is used to set the 'age' to 31 and 'city' to "San Francisco." If the document doesn't exist, it won't be updated.
+Updating Many
+// Update multiple documents
+db.mycollection.updateMany(
+{ age: { $lt: 30 } },
+{ $set: { status: "Young Adult" } }
+)
+Explanation
+In this example, we use the updateMany method to update all documents where the 'age' is less than 30. The $set operator is used to add a new field 'status' with the value "Young Adult" to each matching document.
+Set operator
+// Set a specific field in a document
+db.mycollection.updateOne(
+{ name: "Alice" },
+{ $set: { age: 25, city: "London" } }
+)
+Inc operator
+// Increment the value of a field in a document
+db.mycollection.updateOne(
+{ name: "Bob" },
+{ $inc: { age: 1 } }
+)
+Push operator
+// Add an element to an array field in a document
+db.mycollection.updateOne(
+{ name: "Charlie" },
+{ $push: { hobbies: "Reading" } }
+)
+Removing a document
+// Delete a document
+db.mycollection.deleteOne({ name: "John Doe" })
+Aggregation Framework
+The Aggregation Framework in MongoDB is a set of data processing stages that allows you to filter, reshape, and analyze data in a more sophisticated manner than simple queries. It is inspired by the concept of data pipelines, where documents flow through a sequence of processing stages.
+Key Concepts
+Pipeline: A sequence of stages where each stage performs a specific operation on the data.
+Operators: These are expressions used in various stages of the pipeline to perform specific operations like filtering, grouping, sorting, and more.
+Basic Aggregation Pipeline Operations
+// Find documents where the 'age' is greater than 25
+db.mycollection.aggregate([
+{ $match: { age: { $gt: 25 } } }
+])
+// Group documents by 'city' and calculate the average age in each city
+db.mycollection.aggregate([
+{ $group: { _id: "$city", averageAge: { $avg: "$age" } } }
+])
+Reshaping Documents
+// Project only the 'name' and 'age' fields, and add a new field 'isAdult'
+db.mycollection.aggregate([
+{ $project: { name: 1, age: 1, isAdult: { $gte: ["$age", 18] } } }
+])
+Sorting
+// Sort documents by 'age' in descending order
+db.mycollection.aggregate([
+{ $sort: { age: -1 } }
+])
+Limiting the results
+// Limit the result set to the first 5 documents
+db.mycollection.aggregate([
+{ $limit: 5 }
+])
+
+------------------------------------
+
+
+FILE: Session 12 - SQL Variables and Advanced Features.pptx
+SECTION: Session 12 - SQL Variables and Advanced Features
+
+CONTENT:
+Database Partitioning and Replication
+Why do we want them?
+Partitioning and replication are essential database concepts that help manage large data volumes, optimize performance, and ensure availability.
+CAP Theorem
+What is it?
+Partitioning: The process of dividing a database into distinct, independent parts. Each partition holds a subset of data.
+Replication: The process of copying data across multiple database instances to enhance data availability and reliability.
+Partitioning
+Advantages:
+Improved Query Performance: Queries can focus on specific partitions, reducing the volume of data scanned.
+Better Resource Management: Load is distributed across different servers or disks, enhancing system performance.
+Increased Scalability: Allows horizontal scaling, letting you add storage and compute power as data grows.
+Challenges with Partitioning:
+Skewed Data: If data isn’t distributed evenly, some partitions can become “hotspots” with more load than others.
+Complexity: Queries and joins become more complex since data resides in separate partitions.
+Data Consistency: Synchronizing updates across partitions can add complexity.
+Types of Partitioning
+Range Partitioning:
+Partitions data based on ranges of a key field (e.g., date, numeric range).
+Use Case: Sales data split by year or month for easy retrieval and deletion of old data.
+Hash Partitioning:
+Uses a hash function on a key field to distribute data evenly across partitions.
+Use Case: Balances data evenly, especially useful when data access patterns are unpredictable.
+List Partitioning:
+Divides data based on specific values of a key field.
+Use Case: Partitioning customer data by region, where each partition corresponds to a geographical area.
+Composite Partitioning:
+Combines multiple partitioning strategies, such as range-hash or range-list.
+Use Case: Combines benefits of two strategies, e.g., range partitioning for dates and hash for distributing workload evenly within each date range.
+Database Replication
+Advantages:
+High Availability: Ensures continuous data availability, especially during server failures.
+Improved Read Performance: Allows read operations to be distributed across multiple replicas, reducing load on the primary server.
+Data Recovery: Replication can act as a disaster recovery solution by maintaining up-to-date copies of data in multiple locations.
+Challenges with Replication:
+Consistency: Keeping replicas synchronized with each other is challenging, especially with high write loads.
+Conflict Resolution: Master-master setups require conflict resolution mechanisms when data changes conflict.
+Latency: Synchronous replication can introduce latency in applications sensitive to real-time responses.
+Types of Replication
+Master-Slave Replication:
+A primary (master) database serves write requests, and one or more replicas (slaves) serve read requests.
+Use Case: High-read, low-write workloads where data consistency requirements are moderate.
+Master-Master Replication:
+Two or more databases can serve both read and write requests.
+Use Case: Systems requiring high availability and where nodes are in close proximity to reduce conflict resolution issues.
+Synchronous vs. Asynchronous Replication:
+Synchronous: Data changes are immediately replicated. Ensures strong consistency but has higher latency.
+Asynchronous: Data changes are eventually replicated. Has lower latency but may cause temporary inconsistencies.
+Use Case: Synchronous is used for critical applications needing immediate consistency, while asynchronous fits applications prioritizing performance over immediate consistency.
+Multi-Region Replication:
+Replicates data across geographically distributed data centers.
+Use Case: Improves data access speed for globally distributed users, as they access data from the nearest data center.
+Challenges and Trade-offs
+Partitioning: May improve performance but can add complexity in query management and increase development time.
+Replication: Offers high availability but at the cost of potential data inconsistencies in distributed setups.
+CAP Theorem: Highlights the trade-off between Consistency, Availability, and Partition tolerance in distributed databases.
+
+------------------------------------
+
+
+FILE: Session 17 - Mongo Aggregation Framework.pptx
+SECTION: Session 17 - Mongo Aggregation Framework
+
+CONTENT:
+Data Warehouse
+What is a Data Warehouse?
+Definition: A data warehouse is a centralized repository designed to store, integrate, and analyze large volumes of data from multiple sources.
+Purpose: Facilitates decision-making by providing a unified view of historical and current data.
+Key Characteristics:
+Subject-oriented
+Non-volatile
+Time-variant
+Integrated
+Why do we need data warehouses?
+Challenges Without a Data Warehouse:
+Data silos and lack of integration
+Inefficient reporting
+Limited historical data analysis
+Benefits:
+Improved decision-making
+Centralized data for consistency
+Efficient querying and reporting
+Scalability for large datasets
+OLAP VS OLTP
+Online Analytical Processing (OLAP):
+Focus: Analytical queries and reporting
+Data: Historical and aggregated
+Operations: Read-heavy, complex queries
+Online Transaction Processing (OLTP):
+Focus: Day-to-day transactional processing
+Data: Current and detailed
+Operations: Write-heavy, simple queries
+Importance of data dimensionality
+Dimensionality in Data Warehousing:
+Enables intuitive and efficient data analysis.
+Organizes data into facts (measurable quantities) and dimensions (descriptive categories).
+Benefits:
+Simplifies data navigation.
+Enhances query performance.
+Supports multi-dimensional analysis (e.g., sales by region and time).
+Star Schema
+Structure:
+Central fact table surrounded by multiple dimension tables.
+Advantages:
+Simplified queries
+Easy to understand and implement
+Example:
+Fact table: Sales
+Dimensions: Time, Product, Region
+Snowflake Schema
+Structure:
+Dimension tables are further broken down into sub-dimensions.
+Advantages:
+Reduces data redundancy
+Saves storage space
+Disadvantages:
+Increased query complexity
+Example:
+Dimension "Product" split into "Category" and "Sub-category"
+ETL Processes
+Extract: Gather data from multiple sources.
+Transform: Cleanse and format data.
+Load: Insert data into the data warehouse.
+Importance: Ensures data quality, consistency, and readiness for analysis.
+Tooling
+Data Warehouse Platforms:
+Amazon Redshift
+Google BigQuery
+Snowflake
+Microsoft Azure Synapse
+ETL Tools:
+Apache NiFi
+Talend
+Informatica
+Alteryx
+
+------------------------------------
+
+
+FILE: Session 4-5.pptx
+SECTION: Session 4-5
+
+CONTENT:
+SQL Commands
+The SELECT Statement
+The SELECT clause is a fundamental SQL statement used to retrieve data from a database table.
+It allows you to specify which columns you want to retrieve and present in the query result.
+You can use an asterisk (*) to select all columns from a table.
+SELECT column1, column2, ...
+FROM table_name;
+Select Statement
+You can use aliases to rename columns in the result, making it more readable.
+SELECT product_name AS "Product Name", price AS "Price"
+FROM products;
+Select Statement
+Aritmetic Operations:
+-- Calculate the total price for each product (price * quantity)
+SELECT product_name, price, quantity, price * quantity AS total_price
+FROM products;
+Functions:
+-- Concatenate first_name and last_name with a space in between
+SELECT CONCAT(first_name, ' ', last_name) AS full_name
+FROM employees;
+Functions
+COALESCE - Given a list of values, returns the first non-NULL value.
+CONCAT - Concatenates all of the values in its argument list.
+COUNT - Counts the number of rows passed in.
+Link
+Select Statement
+Using a case:
+Using joins
+-- Retrieve customer information and their associated orders
+SELECT customers.customer_name, orders.order_date
+FROM customers
+INNER JOIN orders ON customers.customer_id = orders.customer_id;
+Group by and aggregate functions
+-- Count the number of orders for each product category
+SELECT product_category, COUNT(*) AS order_count
+FROM products
+INNER JOIN order_details ON products.product_id = order_details.product_id
+GROUP BY product_category;
+Using Subqueries
+-- Find the employees who are managers
+SELECT first_name, last_name
+FROM employees
+WHERE employee_id IN (
+SELECT manager_id
+FROM employees
+);
+The FROM Clause
+Basic from:
+SELECT column1, column2
+FROM table_name;
+Multiple tables:
+SELECT orders.order_id, orders.order_date, customers.customer_name
+FROM orders
+INNER JOIN customers ON orders.customer_id = customers.customer_id;
+Using table aliases
+SELECT column1, column2
+FROM table_name AS alias;
+The WHERE Clause
+Basic syntax:
+SELECT column1, column2
+FROM table_name
+WHERE condition;
+Operators
+The WHERE clause often uses comparison operators to create conditions.
+Examples of common operators: =, >, <, >=, <=, <>
+Logical operators (AND, OR, NOT) can be used to combine multiple conditions.
+The BETWEEN operator is used to specify a range of values.
+The LIKE operator is used for pattern matching, including wildcard characters (% and _).
+The IS NULL operator checks for NULL values in a column.
+The IS NOT NULL operator checks for non-NULL values.
+Examples
+SELECT * FROM customers
+WHERE last_name = 'Smith';
+SELECT * FROM products
+WHERE price <> 50;
+Examples
+SELECT * FROM orders
+WHERE order_date BETWEEN '2023-01-01' AND '2023-06-30';
+SELECT * FROM products
+WHERE product_name LIKE '%apple%';
+SELECT * FROM employees
+WHERE last_name LIKE 'Sm%';
+Examples
+SELECT * FROM products
+WHERE price < 50 AND stock_quantity > 10;
+SELECT * FROM customers
+WHERE state NOT IN ('New York', 'California');
+JOIN Operations
+SELECT columns
+FROM table1
+JOIN table2 ON table1.column_name = table2.column_name;
+The GROUP BY Clause
+SELECT column1, aggregate_function(column2)
+FROM table_name
+GROUP BY column1;
+Aggregate functions (e.g., COUNT, SUM, AVG, MAX, MIN) are used within the SELECT statement to summarize data.
+Each function serves a different purpose, such as counting rows or calculating the average of numeric values.
+The HAVING Clause
+The HAVING clause allows you to filter groups based on aggregate function results.
+It's used to set conditions for the grouped data, similar to the WHERE clause.
+Common SQL Functions: COUNT and SUM
+The COUNT() function is used to count the number of rows or values in a column.
+The SUM() function calculates the sum of values in a numeric column.
+The AVG() function computes the average of numeric values in a column.
+The MAX() function returns the highest value in a column.
+MIN() Function
+
+------------------------------------
+
+
+FILE: Session 6 - Database Managers.pptx
+SECTION: Session 6 - Database Managers
+
+CONTENT:
+Importing and Exporting Data
+Bulk Data
+Bulk data load operations refer to the process of transferring a large volume of data into a database or data storage system simultaneously. Instead of adding data one record at a time, bulk loading allows you to insert, update, or replace a substantial amount of data all at once. This method is designed to efficiently handle large datasets, making it an essential component of data management.
+Bulk Data Benefits
+Efficiency: By loading data in bulk, you can save time and resources. It reduces the time and effort required to add or modify large datasets, making data management more efficient.
+Performance: Bulk loading enhances database performance. Traditional, individual record-level operations can be slow and resource-intensive. Bulk loading reduces the overhead of handling a high number of individual transactions, resulting in better performance.
+Data Migration: During system upgrades, data migrations, or transitions to new databases, bulk data loading simplifies the process. It is particularly useful when you need to transfer large volumes of data from one system to another.
+Consistency: Bulk loading helps maintain data consistency and integrity. When adding or updating data in large quantities, it ensures that the data remains accurate and coherent.
+Analytics and Reporting: For data warehouses and analytics systems, bulk loading is essential. It allows for the consolidation and analysis of vast amounts of data from various sources, facilitating data-driven decision-making.
+Bulk Data Operations
+Bulk data load operations refer to the process of transferring a large volume of data into a database or data storage system simultaneously.
+It involves adding, updating, or replacing large datasets efficiently.
+Ensures Data Efficiency and Performance
+Bulk loading optimizes data efficiency by reducing the time required to insert or update large datasets.
+This helps maintain data consistency and integrity.
+Bulk loading significantly improves database performance by reducing the number of individual transactions.
+It minimizes the overhead associated with handling individual records.
+Transferring Benefits
+Bulk data loading simplifies data migration during system upgrades or transitions.
+It eases the transfer of data between different database systems.
+Tools to import data
+Overview of commonly used tools:
+SQLLoader (Oracle)
+BCP (Bulk Copy Program - Microsoft SQL Server)
+COPY (PostgreSQL)
+Data Import Wizard (MySQL)
+Third-party tools like Apache Nifi, Talend, and Informatica.
+What is SQLDump?
+Its significance in the context of data management.
+How to create SQLDump files.
+Practical examples of using SQLDump to back up and restore data.
+Best practices for SQLDump usage.
+SQL Dump
+SQLDump, also known as a SQL dump or database dump, is a file that contains a snapshot of a database's data and schema structure at a specific point in time. It is a text file that typically consists of SQL statements, which can be used to recreate the database, its tables, and the data within those tables. SQLDump is used for various purposes, including data backup, data migration, and version control of database schema and data.
+What is it used for
+SQLDump is significant in data management for the following reasons:
+Data Backup: It provides a way to create a backup of your database. In the event of data loss, system failures, or human errors, you can use the SQLDump to restore your database to a previous state.
+Data Migration: SQLDump is commonly used when moving data between different database systems or servers. It ensures data consistency during the migration process.
+Version Control: It helps manage changes to the database schema. Developers can use SQLDump files to track and apply schema changes, making it easier to maintain a versioned database structure.
+Auditing and Compliance: SQLDump files can be used for auditing and compliance purposes. They provide a historical record of database changes and data updates, which can be valuable for regulatory compliance.
+Creating SQLDump files typically involves using a database management system's built-in tools or command-line utilities. The exact method may vary depending on the database system you are using. Here is a general process:
+Using Command-Line Tools: Most database management systems offer command-line utilities for creating SQLDump files. For example, in MySQL, you can use the mysqldump command, while in PostgreSQL, the pg_dump command is used. These commands typically require authentication and specify the database to dump. For MySQL, the command might look like mysqldump -u username -p database_name > dumpfile.sql.
+Database Management Software: If you use a graphical database management tool, such as phpMyAdmin for MySQL or pgAdmin for PostgreSQL, you can often generate SQLDump files through the user interface. Look for options like "Export" or "Backup" and select the desired format (usually SQL).
+Data Backup: To create a backup of a MySQL database, you can use the mysqldump command: mysqldump -u username -p database_name > backup.sql. To restore the database from the backup, use: mysql -u username -p database_name < backup.sql.
+Data Migration: If you're moving data from one PostgreSQL database to another, use the pg_dump command to create a dump file and the pg_restore command to load it into the new database.
+Best Practices
+Regular Backups: Schedule regular database backups to ensure you always have recent data snapshots available for recovery.
+Secure Storage: Store SQLDump files in a secure location, as they contain sensitive data. Encrypt them if necessary.
+Documentation: Maintain documentation for your SQLDump files, including the date and purpose of each dump.
+Version Control: For schema version control, use tools like Git to manage changes to your database structure using SQLDump files.
+Testing: Before relying on SQLDump files for disaster recovery, test the restoration process to ensure it works as expected.
+Normal data formats -  CSV
+CSV is a plain text file format commonly used for tabular data.
+Data is organized in rows and columns, where each row represents a record, and columns are separated by commas.
+CSV is lightweight, human-readable, and easy to generate and parse.
+Example:
+Name, Age, City
+John, 30, New York
+Jane, 25, Los Angeles
+Normal data formats - JSON
+JSON is a lightweight data interchange format.
+Data is represented as key-value pairs and structured in a hierarchical format.
+JSON is easy for both humans and machines to read and write.
+Example:
+{
+"Name": "John",
+"Age": 30,
+"City": "New York"
+}
+XML
+XML is a markup language used to encode structured data.
+Data is enclosed in tags, creating a tree-like structure.
+XML is highly flexible and is often used for data interchange and configuration files.
+<Person>
+<Name>John</Name>
+<Age>30</Age>
+<City>New York</City>
+</Person>
+Encoding in Data Files
+ASCII (American Standard Code for Information Interchange):
+ASCII is an older character encoding standard that uses 7 bits to represent 128 different characters.
+It's limited to the basic Latin alphabet, numbers, punctuation, and control characters.
+ASCII is not suitable for encoding characters from non-Latin scripts.
+UTF-8 (Unicode Transformation Format-8):
+UTF-8 is a variable-width character encoding capable of representing all Unicode characters.
+It's backward-compatible with ASCII, meaning the first 128 characters in UTF-8 are the same as in ASCII.
+UTF-8 is widely used for web content, data exchange, and storage as it supports a wide range of languages.
+UTF-16 (Unicode Transformation Format-16):
+UTF-16 is another encoding for Unicode characters, using 16 bits per character.
+It can represent a broader range of characters compared to UTF-8.
+UTF-16 is commonly used in systems that require extensive character support but results in larger file sizes due to the use of 16 bits per character.
+Difference between encoding and its impact
+Character Range:
+ASCII: Limited to the basic Latin characters.
+UTF-8 and UTF-16: Support a much broader range of characters, including non-Latin scripts, symbols, and emojis.
+File Size:
+ASCII: Results in smaller file sizes compared to UTF-8 and UTF-16.
+UTF-8 and UTF-16: Can result in larger file sizes, with UTF-16 generally larger due to the use of 16 bits per character.
+Compatibility:
+ASCII: Limited to basic characters, not suitable for multilingual content.
+UTF-8: Offers compatibility with ASCII and broad support for different languages.
+UTF-16: Supports a wide range of characters but can be less space-efficient.
+Human-Readability:
+ASCII, UTF-8, and UTF-16: All can be human-readable, but ASCII is the simplest to read due to its limited character set.
+Tutorial for SQLDump
+https://docs.google.com/document/d/1D8P7YG4BL6CmAlEXJt_Lpa9vxLUTGATODkq76JoVPdU/edit
+
+------------------------------------
+
+
+FILE: Session 7 - 8 SQL Commands (1).pptx
+SECTION: Session 7 - 8 SQL Commands (1)
+
+CONTENT:
+Mastering SQL Window Functions & CTEs
+Window Functions: The Game Changer
+What Makes Them Special?
+Window functions perform calculations across a set of rows related to the current row—without collapsing them into groups.
+Key difference: Unlike GROUP BY, window functions preserve individual rows while adding calculated columns.
+When to Use Window Functions
+Ranking products by sales within categories
+Calculating running totals and moving averages
+Comparing current vs. previous period values
+Finding top N items per group
+Analyzing time-series data with context
+Core Window Functions
+ROW_NUMBER()
+Assigns a unique sequential number to each row within a partition. Perfect for pagination and eliminating duplicates.
+RANK()
+Ranks rows with gaps when ties occur. If two rows tie for rank 2, the next rank is 4.
+DENSE_RANK()
+Ranks rows without gaps. If two rows tie for rank 2, the next rank is 3. Ideal for leaderboards.
+SUM() OVER()
+Creates running totals. Track cumulative revenue, costs, or quantities as data progresses.
+AVG() OVER()
+Calculates moving averages. Smooth out volatility in time-series data for clearer trends.
+LAG()
+Access values from previous rows. Compare current sales to last month or calculate period-over-period changes.
+LEAD()
+Access values from following rows. Useful for forecasting and forward-looking analysis.
+ROW_NUMBER(): Assigning Unique Sequences
+What it Does & When to Use It
+ROW_NUMBER() assigns a unique, sequential integer to each row within a partition of a result set, starting from 1. Crucially, it does not assign the same number to tied rows, always providing distinct values.
+Identify the first or last occurrence of an event per group (e.g., first purchase by customer).
+Implement pagination for large result sets.
+Deduplicate data, keeping only the 'latest' or 'most relevant' record.
+Key Difference: Unlike RANK() and DENSE_RANK(), which can assign the same rank to rows with identical values, ROW_NUMBER() guarantees a unique number for every row, even if values are tied.
+Syntax & Practical Use Case
+SELECT
+customer_id,
+order_date,
+total_amount,
+ROW_NUMBER() OVER (
+PARTITION BY customer_id
+ORDER BY order_date ASC
+) as rn
+FROM
+Orders;
+This example assigns a sequential number to each order for every customer, ordered by their transaction date. To find each customer's first purchase, you would simply filter for rn = 1 in a subquery or CTE.
+RANK(): Ranking with Gaps
+How it Works & When to Apply It
+RANK() assigns a rank to each row within a partition of a result set. When multiple rows have identical values for the ordering column (a tie), they receive the same rank. Crucially, subsequent ranks are skipped, creating gaps in the numbering sequence.
+For example, if two rows tie for rank 2, the next distinct rank will be 4 (ranks 1, 2, 2, 4). Rank 3 is skipped because two items already occupied rank 2.
+Identifying the top N items per group where ties are common and skipping ranks is acceptable.
+Creating leaderboards where shared scores should result in shared ranks and the next rank reflects true position.
+Analyzing competition or performance metrics.
+Syntax & Practical Application
+SELECT
+department,
+employee_name,
+salary,
+RANK() OVER (
+PARTITION BY department
+ORDER BY salary DESC
+) as salary_rank
+FROM
+Employees;
+This query ranks employees by salary within each department. If two employees in the same department have the same salary, they will share the same salary_rank, and the rank following them will reflect the skipped position. For instance, if two employees are tied for 2nd highest salary, both get rank 2, and the next employee gets rank 4.
+DENSE_RANK(): Ranking Without Gaps
+How it Works & When to Apply It
+DENSE_RANK() assigns a rank to each row within a partition, similar to RANK(). However, when multiple rows have identical values (a tie), they receive the same rank, and crucially, no gaps are created in the subsequent numbering sequence.
+For example, if two rows tie for rank 2, the next distinct rank will be 3 (ranks 1, 2, 2, 3). This is the key difference from RANK() which would skip rank 3.
+Creating leaderboards where ties should not affect the numbering of subsequent ranks.
+Ranking products or entities where a continuous sequence of ranks is important.
+Identifying top performers without skipping rank numbers due to identical scores.
+Syntax & Practical Use Case
+SELECT
+product_category,
+product_name,
+sales_amount,
+DENSE_RANK() OVER (
+PARTITION BY product_category
+ORDER BY sales_amount DESC
+) as sales_rank
+FROM
+ProductSales;
+This query ranks products by sales within each category. If two products in the same category have identical sales, they will share the same sales_rank. The next product will receive the very next rank number, without any skipped ranks. This is ideal for showing continuous progression in rankings, such as top-selling items where multiple products can share a position without disrupting the overall sequence.
+SUM() OVER(): Cumulative Aggregations
+What it Does & When to Use It
+SUM() OVER() computes cumulative or running totals across a defined set of rows. The key distinction from GROUP BY is that it **preserves all individual rows** in the result set, adding an aggregate value to each one.
+This makes it ideal for tracking financial metrics like cumulative revenue, budget spending, or moving sums over specific periods. It allows you to view both granular transaction details and the broader aggregated context simultaneously.
+Syntax & Practical Application
+SELECT
+order_id,
+order_date,
+sale_amount,
+SUM(sale_amount) OVER (
+PARTITION BY customer_id
+ORDER BY order_date ASC
+) as cumulative_customer_sales
+FROM
+Sales;
+This query calculates the running total of sale_amount for each customer, ordered by their transaction date. Each order row remains in the output, now enhanced with a cumulative_customer_sales column showing total sales up to that specific order for that customer.
+AVG() OVER(): Calculating Moving Averages and Contextual Averages
+What it Does & When to Use It
+AVG() OVER() computes the average of a numeric column over a defined "window" of rows. Unlike a standard GROUP BY aggregation, it adds this average to each individual row without collapsing the dataset, preserving all original details.
+Calculate moving averages to smooth out data volatility and identify trends.
+Determine the average performance of a sub-group relative to individual items (e.g., average sales per region for each transaction).
+Compare an individual data point against its immediate context.
+It's excellent for visualizing trends by reducing noise, making
+underlying patterns in time-series data more apparent.
+Syntax & Practical Application
+SELECT
+transaction_date,
+daily_sales,
+AVG(daily_sales) OVER (
+ORDER BY transaction_date ASC
+ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
+) as seven_day_moving_average
+FROM
+SalesData;
+This query calculates a 7-day moving average of daily_sales. For each day, it averages sales from that day and the six preceding days. This technique smooths out daily fluctuations, making it easier to spot underlying sales trends, like seasonal patterns or long-term growth/decline, which would be obscured by daily volatility alone.
+LAG(): Accessing Previous Rows
+What it Does & When to Apply It
+LAG() is a powerful window function that retrieves a value from a row that precedes the current row within the same result set. This allows for direct comparison of a row's data with values from logically earlier, related rows, eliminating the need for complex self-joins.
+It accesses previous rows based on a specified offset and the ordering within its OVER clause. Crucially, the offset parameter (defaulting to 1) determines how many rows back to look. If no preceding row exists (e.g., for the very first row in a partition), LAG() returns NULL, which can be overridden by a specified default_value.
+Calculate period-over-period growth (e.g., month-over-month sales, daily stock changes).
+Compare consecutive records to identify trends or deviations.
+Analyze sequences of events or user actions.
+Syntax & Practical Application
+SELECT
+transaction_date,
+product_id,
+sales_amount,
+LAG(sales_amount, 1, 0) OVER (
+PARTITION BY product_id
+ORDER BY transaction_date
+) as previous_sale,
+(sales_amount - LAG(sales_amount, 1, 0) OVER (
+PARTITION BY product_id
+ORDER BY transaction_date
+)) as sales_difference
+FROM
+ProductTransactions;
+This query demonstrates how to calculate the sales difference for each product between consecutive transactions. PARTITION BY product_id ensures comparisons are made within the same product, while ORDER BY transaction_date defines the sequence. LAG(sales_amount, 1, 0) fetches the sales from the immediately preceding transaction, returning 0 if no previous record exists within that product's partition.
+LEAD(): Accessing Following Rows
+What it Does & When to Apply It
+LEAD() is the counterpart to LAG(). It retrieves a value from a row that follows the current row within the same result set. This enables direct comparisons with future data points, eliminating the need for complex self-joins.
+It accesses subsequent rows based on a specified offset (defaulting to 1) and the ordering within its OVER clause. If no following row exists (e.g., for the very last row in a partition), LEAD() returns NULL, which can be overridden by a specified default_value.
+Forecasting future values based on current data (e.g., next quarter's projected sales).
+Comparing a current period's performance against the next period's.
+Identifying gaps or continuities in sequences, such as transaction series.
+Syntax & Practical Application
+SELECT
+transaction_date,
+product_id,
+sales_amount,
+LEAD(sales_amount, 1, 0) OVER (
+PARTITION BY product_id
+ORDER BY transaction_date
+) as next_sale,
+(LEAD(sales_amount, 1, 0) OVER (
+PARTITION BY product_id
+ORDER BY transaction_date
+) - sales_amount) as sales_growth
+FROM
+ProductTransactions;
+This query calculates the expected sales growth for each product by comparing current sales to the next transaction's sales. PARTITION BY product_id ensures comparisons are made only within the same product, and ORDER BY transaction_date defines the future sequence. LEAD(sales_amount, 1, 0) fetches the sales from the immediately following transaction, returning 0 if no subsequent record exists within that product's partition. This is invaluable for trend analysis and planning.
+PARTITION BY & ORDER BY Explained
+PARTITION BY: Divide Your Data
+Splits your result set into groups. Window functions reset for each partition, like starting fresh calculations per category.
+PARTITION BY department
+Calculations restart for Sales, Marketing, Engineering, etc.
+ORDER BY: Set the Sequence
+Defines the order for calculations within each partition. Critical for rankings, running totals, and LAG/LEAD functions.
+ORDER BY salary DESC
+Processes rows from highest to lowest salary.
+Window Functions in Action
+Example: Ranking Employees by Salary per Department
+SELECT
+employee_name,
+department,
+salary,
+ROW_NUMBER() OVER (
+PARTITION BY department
+ORDER BY salary DESC
+) AS row_num,
+RANK() OVER (
+PARTITION BY department
+ORDER BY salary DESC
+) AS salary_rank,
+DENSE_RANK() OVER (
+PARTITION BY department
+ORDER BY salary DESC
+) AS dense_salary_rank
+FROM employees;
+ROW_NUMBER
+Always unique: 1, 2, 3, 4...
+RANK
+With gaps: 1, 2, 2, 4...
+DENSE_RANK
+No gaps: 1, 2, 2, 3...
+Running Totals & Moving Averages
+Window functions are incredibly powerful for analytical tasks like calculating running totals and moving averages, which provide insight into trends over time. A running total, also known as a cumulative sum, aggregates values sequentially, while a moving average smooths out short-term fluctuations to highlight longer-term trends.
+Calculate Cumulative Sales
+SELECT
+order_date,
+daily_sales,
+SUM(daily_sales) OVER (
+ORDER BY order_date
+ROWS BETWEEN UNBOUNDED PRECEDING
+AND CURRENT ROW
+) AS running_total,
+AVG(daily_sales) OVER (
+ORDER BY order_date
+ROWS BETWEEN 6 PRECEDING
+AND CURRENT ROW
+) AS seven_day_avg
+FROM sales_data;
+Pro Tip: Custom Window Frames with ROWS BETWEEN
+ROWS BETWEEN offers granular control over your window function. It allows you to define flexible and precise window frames for calculations like rolling sums, averages, or counts. Experiment with different frame definitions (e.g., N PRECEDING, N FOLLOWING, BETWEEN N PRECEDING AND M FOLLOWING) to tailor your analytical queries for specific insights. This flexibility is key to extracting complex trends and patterns from your data.
+Understanding the Running Total Calculation
+The SUM(daily_sales) OVER (ORDER BY order_date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) part of the query calculates the running total. Let's break down the OVER() clause:
+ORDER BY order_date: This defines the order in which the sum is accumulated. For a running total, it's crucial to sort by a time-based column (like order_date) to ensure the cumulative sum progresses correctly.
+ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW: This is the critical window frame clause. It tells the function to include all rows from the very beginning of the partition (UNBOUNDED PRECEDING) up to and including the CURRENT ROW. This is precisely how a running total is defined.
+Let's illustrate with an example of daily_sales:
+Day 1: daily_sales = 100. running_total = 100 (100)
+Day 2: daily_sales = 150. running_total = 250 (100 + 150)
+Day 3: daily_sales = 200. running_total = 450 (100 + 150 + 200)
+Decoding the Moving Average Calculation
+The AVG(daily_sales) OVER (ORDER BY order_date ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) calculates a 7-day moving average:
+ORDER BY order_date: Similar to the running total, this ensures the average is calculated based on the chronological sequence of sales data.
+ROWS BETWEEN 6 PRECEDING AND CURRENT ROW: This defines a sliding window of exactly 7 rows (the current row plus the 6 rows immediately preceding it). For each order_date, the average is computed only over this specific 7-day period, providing a smoothed daily average that helps identify trends by reducing noise from daily fluctuations.
+The Importance of ROWS BETWEEN
+The ROWS BETWEEN ... AND ... clause, or similar frame clauses like RANGE BETWEEN, is essential for defining the specific set of rows (the "window frame") that a window function operates on. Without it, the default window frame for ordered window functions (like those with an ORDER BY clause) is typically RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW.
+For Running Totals: Explicitly stating ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW makes the calculation clear and ensures it behaves as expected, including all prior rows up to the current one.
+For Moving Averages: It is absolutely critical for defining the fixed size of the window (e.g., 7 days for a 7-day moving average). If this clause were omitted, the AVG() function would default to averaging all rows from the beginning up to the current row, effectively becoming a running average, not a moving average over a specific period.
+LAG & LEAD: Compare Across Rows
+LAG() Function
+Retrieves data from a previous row in the result set
+LEAD() Function
+Retrieves data from a following row in the result set
+Example: Month-over-Month Growth Analysis
+SELECT
+month,
+revenue,
+LAG(revenue, 1) OVER (ORDER BY month) AS prev_month_revenue,
+revenue - LAG(revenue, 1) OVER (ORDER BY month) AS growth,
+ROUND(
+(revenue - LAG(revenue, 1) OVER (ORDER BY month)) * 100.0
+/ LAG(revenue, 1) OVER (ORDER BY month),
+2
+) AS growth_pct
+FROM monthly_revenue;
+LAG and LEAD unlock powerful period-over-period comparisons without complex self-joins.
+Common Table Expressions (CTEs)
+What Are CTEs?
+CTEs are temporary named result sets defined with the WITH clause. Think of them as "query variables" that make complex SQL readable and maintainable.
+Why Use CTEs?
+Readability: Break complex queries into logical steps
+Reusability: Reference the same subquery multiple times
+Debugging: Test each CTE independently
+Maintenance: Easier to modify and understand later
+CTEs + Window Functions: Power Combo
+Example: Top 3 Products per Category
+WITH ranked_products AS (
+SELECT
+product_name,
+category,
+total_sales,
+RANK() OVER (
+PARTITION BY category
+ORDER BY total_sales DESC
+) AS sales_rank
+FROM products
+)
+SELECT
+product_name,
+category,
+total_sales
+FROM ranked_products
+WHERE sales_rank <= 3
+ORDER BY category, sales_rank;
+Step 1: CTE
+Calculate rankings cleanly
+Step 2: Filter
+Apply WHERE on ranked results
+Result
+Clean, maintainable query
+Key takeaway: You can't filter window functions in WHERE—use a CTE to rank first, then filter the CTE results.
+Exercises for next week
+https://docs.google.com/document/d/1DgbcrieuO4TGqAlZXvQbjmF_Bj_VGgocjmmAFNB7SVY/edit
+
+------------------------------------
+
+
+FILE: Session 9 - Importing and Exporting data.pptx
+SECTION: Session 9 - Importing and Exporting data
+
+CONTENT:
+Date and Time Functions
+Date time functions
+Date and Time Functions in SQL: We will explore the various date and time functions available in SQL, which enable us to manipulate and analyze time-related data within relational databases.
+Time-Series Analysis in SQL: We will delve into the concept of time-series data and how SQL can be used to analyze and visualize time-dependent information effectively.
+Time-Series Databases: We will introduce the concept of time-series databases and explain how they are different from traditional relational databases, and why they are essential for managing time-series data.
+Basic Date and Time Functions
+NOW(): Retrieves the current date and time.
+DATEADD(): Adds a specific amount of time to a date.
+DATEDIFF(): Calculates the difference between two dates or times.
+DATEPART(): Extracts a specific part (e.g., year, month, day) from a date.
+https://timezonemap.info/
+NOW
+SELECT NOW() AS current_datetime;
+Date Add
+SELECT rental_id, rental_date, DATE_ADD(rental_date, INTERVAL 7 DAY) AS extended_return_date
+FROM rental
+LIMIT 5;
+Date Diff
+SELECT customer_id, MAX(rental_date) AS last_rental, DATEDIFF(NOW(), MAX(rental_date)) AS days_since_last_rental
+FROM rental
+GROUP BY customer_id
+ORDER BY days_since_last_rental ASC
+LIMIT 5;
+Extract
+SELECT rental_id, rental_date, EXTRACT(MONTH FROM rental_date) AS rental_month, EXTRACT(YEAR FROM rental_date) AS rental_year
+FROM rental
+ORDER BY rental_date DESC
+LIMIT 5;
+Formatting dates and timezones
+FORMAT(): This function allows you to format a date or time into a specific string representation, making it more human-readable.
+SWITCHOFFSET(): Adjusts the time zone offset for a given datetime value.
+Exercise and homework
+https://docs.google.com/document/d/1XcRi0q1dy8uBF7HG5ZDBqdnbfS8zIe_l_jF3TLNhtps/edit
+Analyzing Time-Series data in SQL
+Window Functions: Utilizing window functions like LAG, LEAD, and OVER() to perform operations on data within a specific time frame.
+Time-Series Patterns: Identifying patterns, trends, and seasonality in time-series data using SQL queries.
+Moving Averages: Calculating moving averages to smooth out noisy data.
+Visualizing data
+Select Visualization Tool: Choose a suitable visualization tool to create charts or graphs. While SQL itself is not typically used for visualization, it can be paired with various external tools that are designed for this purpose. Some common choices include:
+Business Intelligence (BI) Tools: Tools like Tableau, Power BI, or Looker can connect to your SQL database, and you can create interactive dashboards and reports.
+Data Visualization Libraries: Libraries like D3.js, Matplotlib, or Plotly can be used with programming languages such as JavaScript or Python. You can query your SQL database and then use these libraries to create custom visualizations.
+SQL Extensions: Some SQL database management systems have built-in charting extensions, such as PostgreSQL's "pgChart" extension.
+Query and Data Transformation: Use SQL to retrieve the necessary data for visualization.
+Data Visualization: Feed the results of your SQL queries into your chosen visualization tool. Here are some common time-series visualizations:
+Line Charts: Suitable for showing trends over time, such as stock prices or temperature changes.
+Bar Charts: Useful for comparing values at specific time intervals, e.g., monthly sales data.
+Scatter Plots: Can be used to identify relationships and anomalies in time-series data.
+Heatmaps: Useful for visualizing patterns or correlations in multidimensional time-series data.
+What is Time-Series Data?
+Time-series data is a sequence of data points collected or recorded at specific time intervals. Each data point is associated with a timestamp, allowing you to analyze how values change over time. Common examples of time-series data include stock prices, weather measurements, sensor data, and application logs.
+Time-series database keys
+High Write Throughput
+Time-series data often involves a high volume of incoming data points. Time-series databases are optimized for efficient write operations, enabling real-time data ingestion.
+Optimized Storage
+To handle large volumes of time-series data, these databases employ storage techniques like data compression and downsampling to minimize storage requirements while retaining the essential data points.
+Fast Query Performance
+Time-series databases are designed for quick retrieval and analysis of data over specific time ranges, making them well-suited for trend analysis and anomaly detection.
+Data Retention Policies
+They allow you to define how long data is retained, enabling automatic purging of old data that is no longer needed.
+Downsampling
+Time-series databases can automatically reduce the granularity of data as it gets older, saving storage space while preserving overall trends.
+Continuous Queries
+They support continuous or sliding window queries, enabling real-time analytics and monitoring of data streams.
+Time-series data
+1. InfluxDB
+InfluxDB is an open-source time-series database designed for high write and query performance. It is popular in IoT, monitoring, and DevOps use cases. Link
+2. TimescaleDB
+TimescaleDB is an extension of PostgreSQL, designed to handle both relational and time-series data, making it a versatile choice for applications that require both types of data storage.
+3. Prometheus
+Prometheus is an open-source monitoring and alerting toolkit that uses a time-series database to store and analyze metrics data.
+Activities for today
+Download this project from github:
+https://github.com/Joangaes/sakila_visualization/tree/main
+Run the visualizations and change the visualizations to 5 of the queries we have made with Sakila.
+Install InfluxDB -> Connect using python -> Store some points of data you have in MySQL Sakila and change the connector on the Dash App to use the InfluxDB with 1 query.
+https://docs.influxdata.com/influxdb/v2/install/
+Make a prediction with autosarima:
+https://towardsdatascience.com/time-series-forecasting-with-arima-sarima-and-sarimax-ee61099e78f6
+Store the predicted data point.
+
+------------------------------------
