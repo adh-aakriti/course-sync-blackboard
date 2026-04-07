@@ -53,6 +53,7 @@ SAMPLE_COURSE/
 MASTERFILE.txt
 
 download_manifest.json
+
 ---
 
 ## Example Output
