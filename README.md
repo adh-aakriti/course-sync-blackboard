@@ -37,13 +37,21 @@ CourseSync automates this workflow by extracting course materials, organizing th
 
 
 course-sync/
+
 scraper.py
+
 extractor.py
+
 masterfile_builder.py
+
 main.py
+
 Courses/
+
 SAMPLE_COURSE/
+
 MASTERFILE.txt
+
 download_manifest.json
 ---
 
